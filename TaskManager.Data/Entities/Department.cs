@@ -11,6 +11,6 @@ namespace TaskManager.Data.Entities
         // Navigational Properties
         public virtual ICollection<Manager> Managers { get; set; } = [];
         public virtual ICollection<Employee> Employees { get; set; } = [];
-        public virtual ICollection<MyTask> Tasks { get; set; } = [];
+        public virtual ICollection<MyTask> MyTasks { get; set; } = [];
     }
 }

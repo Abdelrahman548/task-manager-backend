@@ -10,6 +10,6 @@ namespace TaskManager.Data.Entities
 
         // Navigational Properties
         public virtual Department? Department { get; set; }
-        public virtual ICollection<MyTask> Tasks { get; set; } = [];
+        public virtual ICollection<MyTask> MyTasks { get; set; } = [];
     }
 }
