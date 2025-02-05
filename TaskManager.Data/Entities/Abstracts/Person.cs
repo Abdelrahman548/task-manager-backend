@@ -10,6 +10,7 @@ namespace TaskManager.Data.Entities.Abstracts
 {
     public abstract class Person : Entity
     {
+        [EmailAddress]
         [MaxLength(50)]
         public string Username { get; set; } = string.Empty;
         [MaxLength(256)]
