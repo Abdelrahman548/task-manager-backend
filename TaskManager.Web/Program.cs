@@ -13,7 +13,8 @@ builder.Services.AddOpenApi();
 
 // Service Extensions
 var jwtOptions = builder.Configuration.GetSection("Jwt").Get<JwtOptions>();
-builder.Services.AddSingleton(jwtOptions);
+if(jwtOptions is not null) builder.Services.AddSingleton(jwtOptions);
+
 builder.Services.AddApplicationServiceExtension();
 
 // Database Register
