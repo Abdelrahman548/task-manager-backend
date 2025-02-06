@@ -1,3 +1,4 @@
+using TaskManager.Service.Helpers;
 using TaskManager.Web.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 // Service Extensions
+var jwtOptions = builder.Configuration.GetSection("Jwt").Get<JwtOptions>();
+builder.Services.AddSingleton(jwtOptions);
 builder.Services.AddApplicationServiceExtension();
 
 var app = builder.Build();
