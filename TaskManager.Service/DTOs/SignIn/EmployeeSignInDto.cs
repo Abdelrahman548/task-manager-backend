@@ -4,16 +4,16 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaskManager.Service.DTOs.Request;
 
-namespace TaskManager.Service.DTOs.Request
+namespace TaskManager.Service.DTOs.SignIn
 {
-    public class LoginRequestDto
+    public class EmployeeSignInDto: EmployeeRequestDto
     {
         [Required]
         [EmailAddress]
         [MaxLength(50)]
         public string Username { get; set; } = string.Empty;
-        
         [Required]
         [MaxLength(50), MinLength(10)]
         public string Password { get; set; } = string.Empty;
