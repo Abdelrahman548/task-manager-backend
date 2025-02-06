@@ -17,8 +17,20 @@ namespace TaskManager.Data.Contexts
             modelBuilder.Entity<Manager>().ToTable("Managers").Ignore(e => e.SearchableProperty);
             modelBuilder.Entity<Employee>().ToTable("Employees").Ignore(e => e.SearchableProperty);
             modelBuilder.Entity<Department>().ToTable("Departments").Ignore(e => e.SearchableProperty);
-            modelBuilder.Entity<MyTask>().ToTable("Tasks").Ignore(e => e.SearchableProperty);
             modelBuilder.Entity<Admin>().ToTable("Admins").Ignore(e => e.SearchableProperty);
+            modelBuilder.Entity<MyTask>().ToTable("Tasks").Ignore(e => e.SearchableProperty);
+
+            modelBuilder.Entity<MyTask>()
+                        .HasOne(t => t.Employee)
+                        .WithMany(t => t.MyTasks)
+                        .HasForeignKey(t => t.EmployeeID)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<MyTask>()
+                        .HasOne(t => t.Manager)
+                        .WithMany(t => t.MyTasks)
+                        .HasForeignKey(t => t.ManagerID)
+                        .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);
         }

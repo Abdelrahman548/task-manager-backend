@@ -6,7 +6,7 @@ namespace TaskManager.Data.Entities
     public class Employee : Person
     {
         //Forign Keys
-        public Guid DepartmentId { get; set; }
+        public Guid DepartmentID { get; set; }
 
 
         // Navigational Properties

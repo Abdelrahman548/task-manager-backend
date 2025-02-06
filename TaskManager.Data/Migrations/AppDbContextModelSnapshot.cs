@@ -101,7 +101,7 @@ namespace TaskManager.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("DepartmentId")
+                    b.Property<Guid>("DepartmentID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FirstName")
@@ -134,7 +134,7 @@ namespace TaskManager.Data.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("DepartmentId");
+                    b.HasIndex("DepartmentID");
 
                     b.ToTable("Employees", (string)null);
                 });
@@ -151,7 +151,7 @@ namespace TaskManager.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("DepartmentId")
+                    b.Property<Guid>("DepartmentID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FirstName")
@@ -184,7 +184,7 @@ namespace TaskManager.Data.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("DepartmentId");
+                    b.HasIndex("DepartmentID");
 
                     b.ToTable("Managers", (string)null);
                 });
@@ -198,7 +198,7 @@ namespace TaskManager.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("DepartmentId")
+                    b.Property<Guid>("DepartmentID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
@@ -209,10 +209,10 @@ namespace TaskManager.Data.Migrations
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("EmployeeId")
+                    b.Property<Guid>("EmployeeID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ManagerId")
+                    b.Property<Guid>("ManagerID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Priority")
@@ -228,11 +228,11 @@ namespace TaskManager.Data.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("DepartmentId");
+                    b.HasIndex("DepartmentID");
 
-                    b.HasIndex("EmployeeId");
+                    b.HasIndex("EmployeeID");
 
-                    b.HasIndex("ManagerId");
+                    b.HasIndex("ManagerID");
 
                     b.ToTable("Tasks", (string)null);
                 });
@@ -241,7 +241,7 @@ namespace TaskManager.Data.Migrations
                 {
                     b.HasOne("TaskManager.Data.Entities.Department", "Department")
                         .WithMany("Employees")
-                        .HasForeignKey("DepartmentId")
+                        .HasForeignKey("DepartmentID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -252,7 +252,7 @@ namespace TaskManager.Data.Migrations
                 {
                     b.HasOne("TaskManager.Data.Entities.Department", "Department")
                         .WithMany("Managers")
-                        .HasForeignKey("DepartmentId")
+                        .HasForeignKey("DepartmentID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -263,20 +263,20 @@ namespace TaskManager.Data.Migrations
                 {
                     b.HasOne("TaskManager.Data.Entities.Department", "Department")
                         .WithMany("MyTasks")
-                        .HasForeignKey("DepartmentId")
+                        .HasForeignKey("DepartmentID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TaskManager.Data.Entities.Employee", "Employee")
                         .WithMany("MyTasks")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("TaskManager.Data.Entities.Manager", "Manager")
                         .WithMany("MyTasks")
-                        .HasForeignKey("ManagerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("ManagerID")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Department");

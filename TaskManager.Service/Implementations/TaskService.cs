@@ -26,7 +26,7 @@ namespace TaskManager.Service.Implementations
             var employee = await repo.Employees.GetByIdAsync(employeeId);
             if (employee is null) return new() { IsSuccess = false, Errors = ["Employee is Not Found"], StatusCode = MyStatusCode.NotFound };
 
-            if(employee.DepartmentId != manager.DepartmentId) return new(){ IsSuccess = false, Errors = ["Employee is Not Found"], StatusCode = MyStatusCode.NotFound };
+            if(employee.DepartmentID != manager.DepartmentID) return new(){ IsSuccess = false, Errors = ["Employee is Not Found"], StatusCode = MyStatusCode.NotFound };
             
             var task = mapper.Map<MyTask>(taskDto);
             task.ID = Guid.NewGuid();
@@ -44,7 +44,7 @@ namespace TaskManager.Service.Implementations
             var task = await repo.MyTasks.GetByIdAsync(taskId);
             if (task is null) return new() { IsSuccess = false, Errors = ["Task is Not Found"], StatusCode = MyStatusCode.NotFound };
 
-            if(task.ManagerId != manager.ID) return new() { IsSuccess = false, Errors = ["Forbidden"], StatusCode = MyStatusCode.Forbidden };
+            if(task.ManagerID != manager.ID) return new() { IsSuccess = false, Errors = ["Forbidden"], StatusCode = MyStatusCode.Forbidden };
             repo.MyTasks.Delete(task);
             await repo.CompeleteAsync();
             return new() { IsSuccess = true, Message = Messages.DELETE_SUCCESS, StatusCode = MyStatusCode.OK};
@@ -80,10 +80,10 @@ namespace TaskManager.Service.Implementations
             var task = await repo.MyTasks.GetByIdAsync(taskId);
             if (task is null) return new() { IsSuccess = false, Errors = ["Task is Not Found"], StatusCode = MyStatusCode.NotFound };
 
-            if(task.ManagerId != manager.ID ) return new() { IsSuccess = false, Errors = ["Forbidden"], StatusCode = MyStatusCode.Forbidden };
-            if(task.DepartmentId != employee.DepartmentId) return new() { IsSuccess = false, Errors = ["Forbidden"], StatusCode = MyStatusCode.Forbidden };
+            if(task.ManagerID != manager.ID ) return new() { IsSuccess = false, Errors = ["Forbidden"], StatusCode = MyStatusCode.Forbidden };
+            if(task.DepartmentID != employee.DepartmentID) return new() { IsSuccess = false, Errors = ["Forbidden"], StatusCode = MyStatusCode.Forbidden };
 
-            task.EmployeeId = employee.ID;
+            task.EmployeeID = employee.ID;
             await repo.CompeleteAsync();
             return new() { IsSuccess = true, Message = Messages.OP_SUCCESS , Data = task.ID, StatusCode = MyStatusCode.OK};
         }
@@ -95,7 +95,7 @@ namespace TaskManager.Service.Implementations
             var task = await repo.MyTasks.GetByIdAsync(taskId);
             if (task is null) return new() { IsSuccess = false, Errors = ["Task is Not Found"], StatusCode = MyStatusCode.NotFound};
 
-            if(task.EmployeeId != employee.ID) return new() { IsSuccess = false, Errors = ["Forbidden"], StatusCode = MyStatusCode.Forbidden };
+            if(task.EmployeeID != employee.ID) return new() { IsSuccess = false, Errors = ["Forbidden"], StatusCode = MyStatusCode.Forbidden };
             
             // Update Task Status
             task.Status = taskDto.Status;
@@ -109,7 +109,7 @@ namespace TaskManager.Service.Implementations
             var employee = await repo.Employees.GetByIdAsync(employeeId);
             if (employee is null) return new() { IsSuccess = false, Errors = ["Employee is Not Found"], StatusCode = MyStatusCode.NotFound };
 
-            var pageList = await repo.MyTasks.GetAllAsync(T => T.EmployeeId == employeeId, queryParameters);
+            var pageList = await repo.MyTasks.GetAllAsync(T => T.EmployeeID == employeeId, queryParameters);
             var responsePageList = new PagedList<MyTaskResponseDto>(
                                     pageList.Items.Select(item => mapper.Map<MyTaskResponseDto>(item)).ToList(),
                                     pageList.Page,
@@ -124,7 +124,7 @@ namespace TaskManager.Service.Implementations
         {
             var manager = await repo.Managers.GetByIdAsync(managerId);
             if (manager is null) return new() { IsSuccess = false, Errors = ["Manager is Not Found"], StatusCode = MyStatusCode.NotFound };
-            var pageList = await repo.MyTasks.GetAllAsync(T => T.ManagerId == managerId, queryParameters);
+            var pageList = await repo.MyTasks.GetAllAsync(T => T.ManagerID == managerId, queryParameters);
             var responsePageList = new PagedList<MyTaskResponseDto>(
                                     pageList.Items.Select(item => mapper.Map<MyTaskResponseDto>(item)).ToList(),
                                     pageList.Page,
@@ -142,12 +142,12 @@ namespace TaskManager.Service.Implementations
             var task = await repo.MyTasks.GetByIdAsync(taskId);
             if (task is null) return new() { IsSuccess = false, Errors = ["Task is Not Found"], StatusCode = MyStatusCode.NotFound };
 
-            if (task.ManagerId != manager.ID) return new() { IsSuccess = false, Errors = ["Forbidden"], StatusCode = MyStatusCode.Forbidden };
+            if (task.ManagerID != manager.ID) return new() { IsSuccess = false, Errors = ["Forbidden"], StatusCode = MyStatusCode.Forbidden };
 
             var employee = await repo.Managers.GetByIdAsync(taskDto.EmployeeId);
             if (employee is null) return new() { IsSuccess = false, Errors = ["Employee is Not Found"], StatusCode = MyStatusCode.NotFound };
 
-            if(manager.DepartmentId != employee.DepartmentId) return new() { IsSuccess = false, Errors = ["Forbidden"], StatusCode = MyStatusCode.Forbidden };
+            if(manager.DepartmentID != employee.DepartmentID) return new() { IsSuccess = false, Errors = ["Forbidden"], StatusCode = MyStatusCode.Forbidden };
 
             // Update Task Status
             mapper.Map(taskDto, task);

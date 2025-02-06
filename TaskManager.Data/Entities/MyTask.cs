@@ -17,9 +17,9 @@ namespace TaskManager.Data.Entities
         public override string SearchableProperty => Title;
 
         //Forign Keys
-        public Guid DepartmentId {  get; set; }
-        public Guid ManagerId {  get; set; }
-        public Guid EmployeeId {  get; set; }
+        public Guid DepartmentID {  get; set; }
+        public Guid ManagerID {  get; set; }
+        public Guid EmployeeID {  get; set; }
 
         // Navigational Properties
         public virtual Manager? Manager { get; set; }

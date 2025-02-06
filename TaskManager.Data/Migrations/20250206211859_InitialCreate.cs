@@ -48,7 +48,7 @@ namespace TaskManager.Data.Migrations
                 columns: table => new
                 {
                     ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DepartmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DepartmentID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Username = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
@@ -62,8 +62,8 @@ namespace TaskManager.Data.Migrations
                 {
                     table.PrimaryKey("PK_Employees", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Employees_Departments_DepartmentId",
-                        column: x => x.DepartmentId,
+                        name: "FK_Employees_Departments_DepartmentID",
+                        column: x => x.DepartmentID,
                         principalTable: "Departments",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
@@ -74,7 +74,7 @@ namespace TaskManager.Data.Migrations
                 columns: table => new
                 {
                     ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DepartmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DepartmentID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Username = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
@@ -88,8 +88,8 @@ namespace TaskManager.Data.Migrations
                 {
                     table.PrimaryKey("PK_Managers", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Managers_Departments_DepartmentId",
-                        column: x => x.DepartmentId,
+                        name: "FK_Managers_Departments_DepartmentID",
+                        column: x => x.DepartmentID,
                         principalTable: "Departments",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
@@ -105,58 +105,58 @@ namespace TaskManager.Data.Migrations
                     DueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Priority = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    DepartmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ManagerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EmployeeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DepartmentID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ManagerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EmployeeID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tasks", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Tasks_Departments_DepartmentId",
-                        column: x => x.DepartmentId,
+                        name: "FK_Tasks_Departments_DepartmentID",
+                        column: x => x.DepartmentID,
                         principalTable: "Departments",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Tasks_Employees_EmployeeId",
-                        column: x => x.EmployeeId,
+                        name: "FK_Tasks_Employees_EmployeeID",
+                        column: x => x.EmployeeID,
                         principalTable: "Employees",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Tasks_Managers_ManagerId",
-                        column: x => x.ManagerId,
+                        name: "FK_Tasks_Managers_ManagerID",
+                        column: x => x.ManagerID,
                         principalTable: "Managers",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Employees_DepartmentId",
+                name: "IX_Employees_DepartmentID",
                 table: "Employees",
-                column: "DepartmentId");
+                column: "DepartmentID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Managers_DepartmentId",
+                name: "IX_Managers_DepartmentID",
                 table: "Managers",
-                column: "DepartmentId");
+                column: "DepartmentID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tasks_DepartmentId",
+                name: "IX_Tasks_DepartmentID",
                 table: "Tasks",
-                column: "DepartmentId");
+                column: "DepartmentID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tasks_EmployeeId",
+                name: "IX_Tasks_EmployeeID",
                 table: "Tasks",
-                column: "EmployeeId");
+                column: "EmployeeID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tasks_ManagerId",
+                name: "IX_Tasks_ManagerID",
                 table: "Tasks",
-                column: "ManagerId");
+                column: "ManagerID");
         }
 
         /// <inheritdoc />
