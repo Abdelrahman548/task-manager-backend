@@ -18,7 +18,7 @@ if(jwtOptions is not null) builder.Services.AddSingleton(jwtOptions);
 builder.Services.AddApplicationServiceExtension();
 
 // Database Register
-builder.Services.AddDbContext<AppDbContext>(options => options.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("TaskManager")));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("TaskManagerDB")));
 
 var app = builder.Build();
 
