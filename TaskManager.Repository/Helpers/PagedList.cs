@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace TaskManager.Repository.Helpers
 {
@@ -23,12 +24,12 @@ namespace TaskManager.Repository.Helpers
             TotalCount = totalCount;
         }
 
-        public static PagedList<T> Create(IQueryable<T> query, int page, int pageSize)
+        public async static Task<PagedList<T>> CreateAsync(IQueryable<T> query, int page, int pageSize)
         {
             int totalCount = query.Count();
-            var items = query.Skip((page - 1) * pageSize)
+            var items = await query.Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .ToList();
+                .ToListAsync();
             return new(items, page, pageSize, totalCount);
         }
     }

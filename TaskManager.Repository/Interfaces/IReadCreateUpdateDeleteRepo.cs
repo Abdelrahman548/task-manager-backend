@@ -8,7 +8,7 @@ using TaskManager.Repository.Interfaces.Base;
 
 namespace TaskManager.Repository.Interfaces
 {
-    public interface IReadCreateUpdateDeleteRepo<T> : IReadRepository<T>, ICreateRepository<T>, IUpdateRepository<T>, IDeleteRepository<T>
+    public interface IReadCreateUpdateDeleteRepo<T> : IReadCreateUpdateRepo<T>, IDeleteRepository<T>
         where T : Entity
     {
     }
