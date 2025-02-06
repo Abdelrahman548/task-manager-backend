@@ -88,5 +88,15 @@ namespace TaskManager.Repository.Implementations
         {
             _context.Set<T>().Update(item);
         }
+        public async Task<T?> FindAsync(Expression<Func<T, bool>> criteria, string[] includes = null)
+        {
+            IQueryable<T> query = _context.Set<T>();
+
+            if (includes != null)
+                foreach (var incluse in includes)
+                    query = query.Include(incluse);
+
+            return await query.SingleOrDefaultAsync(criteria);
+        }
     }
 }
