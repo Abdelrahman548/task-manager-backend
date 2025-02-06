@@ -14,6 +14,7 @@ namespace TaskManager.Data.Entities
         public DateTime DueDate { get; set; }
         public MyTaskPriority Priority { get; set; }
         public MyTaskStatus Status { get; set; }
+        public override string SearchableProperty => Title;
 
         //Forign Keys
         public Guid DepartmentId {  get; set; }

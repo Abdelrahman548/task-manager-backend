@@ -7,6 +7,7 @@ namespace TaskManager.Data.Entities
     {
         [MaxLength(50)]
         public string Title { get; set; } = string.Empty;
+        public override string SearchableProperty => Title;
 
         // Navigational Properties
         public virtual ICollection<Manager> Managers { get; set; } = [];

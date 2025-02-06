@@ -21,6 +21,7 @@ namespace TaskManager.Data.Entities.Abstracts
         public string LastName { get; set; } = string.Empty;
         [MaxLength(20)]
         public string PhoneNumber { get; set; } = string.Empty;
+        public override string SearchableProperty => FirstName + LastName;
         public Gender Gender { get; set; }
         public DateOnly BirthDate { get; set; }
     }

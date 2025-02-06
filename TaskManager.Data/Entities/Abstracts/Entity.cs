@@ -10,5 +10,6 @@ namespace TaskManager.Data.Entities.Abstracts
     {
         public Guid ID { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public virtual string SearchableProperty { get;} = string.Empty;
     }
 }
