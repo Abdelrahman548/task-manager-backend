@@ -13,12 +13,13 @@ namespace TaskManager.Service.Interfaces
     public interface ITaskService
     {
         Task<BaseResult<MyTaskResponseDto>> Get(Guid taskId);
-        Task<BaseResult<PagedList<MyTaskResponseDto>>> GetEmployeeTasks(Guid emploeeId);
-        Task<BaseResult<PagedList<MyTaskResponseDto>>> GetManagerTasks(Guid managerId);
+        Task<BaseResult<PagedList<MyTaskResponseDto>>> GetEmployeeTasks(Guid emploeeId, ItemQueryParameters queryParameters);
+        Task<BaseResult<PagedList<MyTaskResponseDto>>> GetManagerTasks(Guid managerId, ItemQueryParameters queryParameters);
         Task<BaseResult<PagedList<MyTaskResponseDto>>> Get(ItemQueryParameters criteria);
         Task<BaseResult<Guid>> Add(MyTaskRequestDto task, Guid managerId, Guid employeeId);
         Task<BaseResult<Guid>> ReAssign(Guid taskId, Guid managerId, Guid employeeId);
-        Task<BaseResult<Guid>> Update(Guid taskId, MyTaskRequestDto task, Guid employeeId);
+        Task<BaseResult<Guid>> UpdateStatus(Guid taskId, MyTaskRequestDto task, Guid employeeId);
+        Task<BaseResult<Guid>> Update(Guid taskId, MyTaskRequestDto task, Guid managerId);
         Task<BaseResult<string>> Delete(Guid taskId, Guid managerId);
     }
 }

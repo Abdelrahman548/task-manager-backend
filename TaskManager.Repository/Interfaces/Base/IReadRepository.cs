@@ -14,6 +14,7 @@ namespace TaskManager.Repository.Interfaces.Base
     {
         Task<T?> GetByIdAsync(Guid id);
         Task<PagedList<T>> GetAllAsync(ItemQueryParameters queryParameters);
+        Task<PagedList<T>> GetAllAsync(Expression<Func<T, bool>> criteria, ItemQueryParameters queryParameters);
         Task<T?> FindAsync(Expression<Func<T, bool>> criteria, string[] includes = null);
     }
 }

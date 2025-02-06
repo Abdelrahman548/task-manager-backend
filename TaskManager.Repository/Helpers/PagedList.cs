@@ -16,7 +16,7 @@ namespace TaskManager.Repository.Helpers
         public bool HasNextPage => Page * PageSize < TotalCount;
         public bool HasPreviousPage => Page > 1;
 
-        private PagedList(List<T> items, int page, int pageSize, int totalCount)
+        public PagedList(List<T> items, int page, int pageSize, int totalCount)
         {
             Items = items;
             Page = page;

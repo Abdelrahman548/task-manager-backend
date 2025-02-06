@@ -36,7 +36,17 @@ namespace TaskManager.Repository.Implementations
         public async Task<PagedList<T>> GetAllAsync(ItemQueryParameters queryParameters)
         {
             var query = _context.Set<T>().AsQueryable();
-            
+            var pageList = await GetAllAsyncPrivate(query, queryParameters);
+            return pageList;
+        }
+        public async Task<PagedList<T>> GetAllAsync(Expression<Func<T, bool>> criteria, ItemQueryParameters queryParameters)
+        {
+            var query = _context.Set<T>().Where(criteria).AsQueryable();
+            var pageList = await GetAllAsyncPrivate(query, queryParameters);
+            return pageList;
+        }
+        private async Task<PagedList<T>> GetAllAsyncPrivate(IQueryable<T> query ,ItemQueryParameters queryParameters)
+        {
             // Filteration
             if (!string.IsNullOrEmpty(queryParameters.Category))
             {
@@ -56,10 +66,9 @@ namespace TaskManager.Repository.Implementations
 
             // Pagination
             var pageList = await PagedList<T>.CreateAsync(query, queryParameters.Page, queryParameters.Limit);
-            
+
             return pageList;
         }
-
         private IQueryable<T> ApplySorting(IQueryable<T> query, string sortField, bool descending)
         {
             var propertyInfo = typeof(T).GetProperty(sortField, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
