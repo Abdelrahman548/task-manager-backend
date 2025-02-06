@@ -26,6 +26,7 @@ namespace TaskManager.Web.Extensions
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IManagerService, ManagerService>();
             services.AddScoped<ITaskService, TaskService>();
+            services.AddScoped<IAuthService, AuthService>();
 
 
         }
