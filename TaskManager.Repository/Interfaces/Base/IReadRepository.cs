@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaskManager.Repository.Helpers;
 
 namespace TaskManager.Repository.Interfaces.Base
 {
@@ -10,6 +11,6 @@ namespace TaskManager.Repository.Interfaces.Base
         where T : class
     {
         Task<T?> GetByIdAsync(Guid id);
-        Task<IEnumerable<T>> GetAllAsync();
+        Task<PagedList<T>> GetAllAsync(ItemQueryParameters queryParameters);
     }
 }
