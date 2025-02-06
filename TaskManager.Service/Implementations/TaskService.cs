@@ -29,6 +29,7 @@ namespace TaskManager.Service.Implementations
             if(employee.DepartmentId != manager.DepartmentId) return new(){ IsSuccess = false, Errors = ["Employee is Not Found"], StatusCode = MyStatusCode.NotFound };
             
             var task = mapper.Map<MyTask>(taskDto);
+            task.ID = Guid.NewGuid();
 
             await repo.MyTasks.AddAsync(task);
             await repo.CompeleteAsync();
