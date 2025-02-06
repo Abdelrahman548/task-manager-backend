@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using TaskManager.Data.Contexts;
 using TaskManager.Service.Helpers;
 using TaskManager.Web.Extensions;
 
@@ -13,6 +15,9 @@ builder.Services.AddOpenApi();
 var jwtOptions = builder.Configuration.GetSection("Jwt").Get<JwtOptions>();
 builder.Services.AddSingleton(jwtOptions);
 builder.Services.AddApplicationServiceExtension();
+
+// Database Register
+builder.Services.AddDbContext<AppDbContext>(options => options.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("TaskManager")));
 
 var app = builder.Build();
 
