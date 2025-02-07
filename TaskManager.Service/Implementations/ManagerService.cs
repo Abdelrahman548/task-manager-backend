@@ -52,9 +52,14 @@ namespace TaskManager.Service.Implementations
         {
             var manager = await repo.Managers.GetByIdAsync(managerId);
             if (manager is null) return new() { IsSuccess = false, Errors = ["Not Found"], StatusCode = MyStatusCode.NotFound};
+            if (manager.DepartmentID != managerDto.DepartmentId)
+            {
+                var department = await repo.Departments.GetByIdAsync(managerDto.DepartmentId);
+                if (department is null) return new() { IsSuccess = false, Errors = ["Department is Not Found"], StatusCode = MyStatusCode.NotFound };
+            }
             mapper.Map(managerDto, manager);
             await repo.CompeleteAsync();
-            return new() { IsSuccess = false, Message = Messages.UPDATE_SUCCESS, Data = manager.ID, StatusCode = MyStatusCode.OK};
+            return new() { IsSuccess = true, Message = Messages.UPDATE_SUCCESS, Data = manager.ID, StatusCode = MyStatusCode.OK};
         }
     }
 }
