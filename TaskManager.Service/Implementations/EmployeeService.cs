@@ -51,9 +51,14 @@ namespace TaskManager.Service.Implementations
         {
             var emp = await repo.Employees.GetByIdAsync(employeeId);
             if (emp is null) return new() { IsSuccess = false, Errors = ["Not Found"], StatusCode = MyStatusCode.NotFound };
+            if(emp.DepartmentID != employeeDto.DepartmentId)
+            {
+                var department = await repo.Departments.GetByIdAsync(employeeDto.DepartmentId);
+                if (department is null) return new() { IsSuccess = false, Errors = ["Department is Not Found"], StatusCode = MyStatusCode.NotFound };
+            }
             mapper.Map(employeeDto, emp);
             await repo.CompeleteAsync();
-            return new() { IsSuccess = false, Message = Messages.UPDATE_SUCCESS, Data = emp.ID, StatusCode = MyStatusCode.OK };
+            return new() { IsSuccess = true, Message = Messages.UPDATE_SUCCESS, Data = emp.ID, StatusCode = MyStatusCode.OK };
         }
     }
 }
