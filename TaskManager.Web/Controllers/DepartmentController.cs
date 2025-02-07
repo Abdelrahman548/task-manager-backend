@@ -17,6 +17,13 @@ namespace TaskManager.Web.Controllers
         {
             this.departmentService = departmentService;
         }
+        
+        [HttpPost("")]
+        public async Task<ActionResult<BaseResult<DepartmentResponseDto>>> Add(DepartmentRequestDto dto)
+        {
+            var result = await departmentService.Add(dto);
+            return StatusCode((int)result.StatusCode, result);
+        }
 
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<BaseResult<DepartmentResponseDto>>> Get(Guid id)
@@ -25,18 +32,29 @@ namespace TaskManager.Web.Controllers
 
             return StatusCode((int)result.StatusCode, result);
         }
-        
-        [HttpPost("")]
-        public async Task<ActionResult<BaseResult<DepartmentResponseDto>>> Add(DepartmentRequestDto dto)
-        {
-            var result = await departmentService.Add(dto);
-            return StatusCode((int)result.StatusCode, result);
-        }
+
         [HttpGet("")]
-        public async Task<ActionResult<BaseResult<PagedList<DepartmentResponseDto>>>> GetAll([FromQuery]ItemQueryParameters queryParameters)
+        public async Task<ActionResult<BaseResult<PagedList<DepartmentResponseDto>>>> GetAll([FromQuery] ItemQueryParameters queryParameters)
         {
             var result = await departmentService.Get(queryParameters);
             return StatusCode((int)result.StatusCode, result);
         }
+
+        [HttpPut("{id:guid}")]
+        public async Task<ActionResult<BaseResult<Guid>>> Update(Guid id, DepartmentRequestDto dto)
+        {
+            var result = await departmentService.Update(dto,id);
+
+            return StatusCode((int)result.StatusCode, result);
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult<BaseResult<string>>> Delete(Guid id)
+        {
+            var result = await departmentService.Delete(id);
+
+            return StatusCode((int)result.StatusCode, result);
+        }
+
     }
 }
