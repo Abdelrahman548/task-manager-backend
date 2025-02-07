@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using TaskManager.Data.Helpers;
@@ -17,11 +18,11 @@ namespace TaskManager.Data.Entities.Abstracts
         public string Password { get; set; } = string.Empty;
         [MaxLength(20)]
         public string FirstName { get; set; } = string.Empty;
+        
         [MaxLength(20)]
         public string LastName { get; set; } = string.Empty;
         [MaxLength(20)]
         public string PhoneNumber { get; set; } = string.Empty;
-        public override string SearchableProperty => FirstName + LastName;
         public Gender Gender { get; set; }
         public DateOnly BirthDate { get; set; }
     }

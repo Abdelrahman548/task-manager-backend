@@ -17,6 +17,7 @@ namespace TaskManager.Data.Migrations
                 {
                     ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    SearchableProperty = table.Column<string>(type: "nvarchar(max)", nullable: false, computedColumnSql: "Username + Password"),
                     Username = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
@@ -36,7 +37,8 @@ namespace TaskManager.Data.Migrations
                 {
                     ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    SearchableProperty = table.Column<string>(type: "nvarchar(max)", nullable: false, computedColumnSql: "Title")
                 },
                 constraints: table =>
                 {
@@ -50,6 +52,7 @@ namespace TaskManager.Data.Migrations
                     ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DepartmentID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    SearchableProperty = table.Column<string>(type: "nvarchar(max)", nullable: false, computedColumnSql: "Username + Password"),
                     Username = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
@@ -76,6 +79,7 @@ namespace TaskManager.Data.Migrations
                     ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DepartmentID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    SearchableProperty = table.Column<string>(type: "nvarchar(max)", nullable: false, computedColumnSql: "Username + Password"),
                     Username = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
@@ -108,7 +112,8 @@ namespace TaskManager.Data.Migrations
                     DepartmentID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ManagerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     EmployeeID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    SearchableProperty = table.Column<string>(type: "nvarchar(max)", nullable: false, computedColumnSql: "Title")
                 },
                 constraints: table =>
                 {

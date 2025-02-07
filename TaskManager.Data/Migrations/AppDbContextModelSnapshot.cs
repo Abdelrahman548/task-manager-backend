@@ -60,6 +60,12 @@ namespace TaskManager.Data.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<string>("SearchableProperty")
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("nvarchar(max)")
+                        .HasComputedColumnSql("Username + Password");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -78,6 +84,12 @@ namespace TaskManager.Data.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("SearchableProperty")
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("nvarchar(max)")
+                        .HasComputedColumnSql("Title");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -126,6 +138,12 @@ namespace TaskManager.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("SearchableProperty")
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("nvarchar(max)")
+                        .HasComputedColumnSql("Username + Password");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -177,6 +195,12 @@ namespace TaskManager.Data.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<string>("SearchableProperty")
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("nvarchar(max)")
+                        .HasComputedColumnSql("Username + Password");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -217,6 +241,12 @@ namespace TaskManager.Data.Migrations
 
                     b.Property<int>("Priority")
                         .HasColumnType("int");
+
+                    b.Property<string>("SearchableProperty")
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("nvarchar(max)")
+                        .HasComputedColumnSql("Title");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
 using TaskManager.Data.Entities.Abstracts;
 
 namespace TaskManager.Data.Entities
@@ -7,7 +8,6 @@ namespace TaskManager.Data.Entities
     {
         [MaxLength(50)]
         public string Title { get; set; } = string.Empty;
-        public override string SearchableProperty => Title;
 
         // Navigational Properties
         public virtual ICollection<Manager> Managers { get; set; } = [];

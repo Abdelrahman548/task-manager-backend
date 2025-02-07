@@ -14,11 +14,13 @@ namespace TaskManager.Data.Contexts
         public AppDbContext(DbContextOptions options): base(options){}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Manager>().ToTable("Managers").Ignore(e => e.SearchableProperty);
-            modelBuilder.Entity<Employee>().ToTable("Employees").Ignore(e => e.SearchableProperty);
-            modelBuilder.Entity<Department>().ToTable("Departments").Ignore(e => e.SearchableProperty);
-            modelBuilder.Entity<Admin>().ToTable("Admins").Ignore(e => e.SearchableProperty);
-            modelBuilder.Entity<MyTask>().ToTable("Tasks").Ignore(e => e.SearchableProperty);
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Manager>().ToTable("Managers").Property(p => p.SearchableProperty).HasComputedColumnSql("Username + Password");
+            modelBuilder.Entity<Employee>().ToTable("Employees").Property(p => p.SearchableProperty).HasComputedColumnSql("Username + Password");
+            modelBuilder.Entity<Department>().ToTable("Departments").Property(p => p.SearchableProperty).HasComputedColumnSql("Title");
+            modelBuilder.Entity<Admin>().ToTable("Admins").Property(p => p.SearchableProperty).HasComputedColumnSql("Username + Password");
+            modelBuilder.Entity<MyTask>().ToTable("Tasks").Property(p => p.SearchableProperty).HasComputedColumnSql("Title");
 
             modelBuilder.Entity<MyTask>()
                         .HasOne(t => t.Employee)
@@ -32,7 +34,6 @@ namespace TaskManager.Data.Contexts
                         .HasForeignKey(t => t.ManagerID)
                         .OnDelete(DeleteBehavior.Restrict);
 
-            base.OnModelCreating(modelBuilder);
         }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<Manager> Managers { get; set; }
