@@ -22,24 +22,24 @@ namespace TaskManager.Web.Controllers
             this.adminService = adminService;
         }
 
-        [HttpGet("{id:guid}")]
-        public async Task<ActionResult<BaseResult<AdminResponseDto>>> Get(Guid id)
+        [HttpGet("{adminId:guid}")]
+        public async Task<ActionResult<BaseResult<AdminResponseDto>>> Get(Guid adminId)
         {
-            var result = await adminService.Get(id);
+            var result = await adminService.Get(adminId);
 
             return StatusCode((int)result.StatusCode, result);
         }
         [HttpGet("Current")]
         public async Task<ActionResult<BaseResult<AdminResponseDto>>> Get()
         {
-            var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (id is null)
+            var adminIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (adminIdStr is null)
             {
                 return Unauthorized(
                         new BaseResult<Guid>() { IsSuccess = false, Errors = ["UnAuthenticated"], StatusCode = MyStatusCode.Unauthorized }
                     );
             }
-            var adminID = new Guid(id);
+            var adminID = new Guid(adminIdStr);
             var result = await adminService.Get(adminID);
 
             return StatusCode((int)result.StatusCode, result);
@@ -55,14 +55,14 @@ namespace TaskManager.Web.Controllers
         [HttpPut("")]
         public async Task<ActionResult<BaseResult<Guid>>> Update(AdminRequestDto dto)
         {
-            var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (id is null)
+            var adminIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (adminIdStr is null)
             {
                 return Unauthorized(
                         new BaseResult<Guid>() { IsSuccess = false, Errors = ["UnAuthenticated"], StatusCode = MyStatusCode.Unauthorized }
                     );
             }
-            var adminID = new Guid(id);
+            var adminID = new Guid(adminIdStr);
             var result = await adminService.Update(adminID, dto);
 
             return StatusCode((int)result.StatusCode, result);

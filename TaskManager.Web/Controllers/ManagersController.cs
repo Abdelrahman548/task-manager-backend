@@ -19,37 +19,37 @@ namespace TaskManager.Web.Controllers
         {
             this.managerService = managerService;
         }
-        [HttpGet("{id:guid}")]
+        [HttpGet("{managerId:guid}")]
         [Authorize(Roles = "Admin,Manager,Employee")]
-        public async Task<ActionResult<BaseResult<ManagerResponseDto>>> Get(Guid id)
+        public async Task<ActionResult<BaseResult<ManagerResponseDto>>> Get(Guid managerId)
         {
-            var result = await managerService.Get(id);
+            var result = await managerService.Get(managerId);
 
             return StatusCode((int)result.StatusCode, result);
         }
 
         [HttpGet("")]
-        [Authorize(Roles = "Admin,Manager,Employee")]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<ActionResult<BaseResult<PagedList<ManagerResponseDto>>>> GetAll([FromQuery] ItemQueryParameters queryParameters)
         {
             var result = await managerService.Get(queryParameters);
             return StatusCode((int)result.StatusCode, result);
         }
 
-        [HttpPut("{id:guid}")]
+        [HttpPut("{managerId:guid}")]
         [Authorize(Roles = "Admin,Manager")]
-        public async Task<ActionResult<BaseResult<Guid>>> Update(Guid id, ManagerRequestDto dto)
+        public async Task<ActionResult<BaseResult<Guid>>> Update(Guid managerId, ManagerRequestDto dto)
         {
-            var result = await managerService.Update(dto, id);
+            var result = await managerService.Update(dto, managerId);
 
             return StatusCode((int)result.StatusCode, result);
         }
 
-        [HttpDelete("{id:guid}")]
+        [HttpDelete("{managerId:guid}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<BaseResult<string>>> Delete(Guid id)
+        public async Task<ActionResult<BaseResult<string>>> Delete(Guid managerId)
         {
-            var result = await managerService.Delete(id);
+            var result = await managerService.Delete(managerId);
 
             return StatusCode((int)result.StatusCode, result);
         }

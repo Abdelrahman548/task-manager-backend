@@ -27,11 +27,11 @@ namespace TaskManager.Web.Controllers
             return StatusCode((int)result.StatusCode, result);
         }
 
-        [HttpGet("{id:guid}")]
+        [HttpGet("{DepartmentId:guid}")]
         [Authorize(Roles = "Admin,Manager,Employee")]
-        public async Task<ActionResult<BaseResult<DepartmentResponseDto>>> Get(Guid id)
+        public async Task<ActionResult<BaseResult<DepartmentResponseDto>>> Get(Guid DepartmentId)
         {
-            var result = await departmentService.Get(id);
+            var result = await departmentService.Get(DepartmentId);
 
             return StatusCode((int)result.StatusCode, result);
         }
@@ -43,35 +43,36 @@ namespace TaskManager.Web.Controllers
             return StatusCode((int)result.StatusCode, result);
         }
 
-        [HttpGet("{id:guid}/Employees")]
+        [HttpGet("{DepartmentId:guid}/Employees")]
         [Authorize(Roles = "Admin,Manager,Employee")]
-        public async Task<ActionResult<BaseResult<PagedList<EmployeeResponseDto>>>> GetAllEmployees(Guid id, [FromQuery] ItemQueryParameters queryParameters)
+        public async Task<ActionResult<BaseResult<PagedList<EmployeeResponseDto>>>> GetAllEmployees(Guid DepartmentId, [FromQuery] ItemQueryParameters queryParameters)
         {
-            var result = await departmentService.GetEmployees(id,queryParameters);
+            var result = await departmentService.GetEmployees(DepartmentId,queryParameters);
             return StatusCode((int)result.StatusCode, result);
         }
-        [HttpGet("{id:guid}/Managers")]
+        
+        [HttpGet("{DepartmentId:guid}/Managers")]
         [Authorize(Roles = "Admin,Manager,Employee")]
-        public async Task<ActionResult<BaseResult<PagedList<ManagerResponseDto>>>> GetAllManagers(Guid id, [FromQuery] ItemQueryParameters queryParameters)
+        public async Task<ActionResult<BaseResult<PagedList<ManagerResponseDto>>>> GetAllManagers(Guid DepartmentId, [FromQuery] ItemQueryParameters queryParameters)
         {
-            var result = await departmentService.GetManagers(id,queryParameters);
+            var result = await departmentService.GetManagers(DepartmentId,queryParameters);
             return StatusCode((int)result.StatusCode, result);
         }
 
-        [HttpPut("{id:guid}")]
+        [HttpPut("{DepartmentId:guid}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<BaseResult<Guid>>> Update(Guid id, DepartmentRequestDto dto)
+        public async Task<ActionResult<BaseResult<Guid>>> Update(Guid DepartmentId, DepartmentRequestDto dto)
         {
-            var result = await departmentService.Update(dto,id);
+            var result = await departmentService.Update(dto,DepartmentId);
 
             return StatusCode((int)result.StatusCode, result);
         }
 
-        [HttpDelete("{id:guid}")]
+        [HttpDelete("{DepartmentId:guid}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<BaseResult<string>>> Delete(Guid id)
+        public async Task<ActionResult<BaseResult<string>>> Delete(Guid DepartmentId)
         {
-            var result = await departmentService.Delete(id);
+            var result = await departmentService.Delete(DepartmentId);
 
             return StatusCode((int)result.StatusCode, result);
         }
