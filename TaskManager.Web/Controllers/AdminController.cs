@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TaskManager.Repository.Helpers;
 using TaskManager.Service.DTOs.Request;
 using TaskManager.Service.DTOs.Response;
@@ -10,6 +11,7 @@ namespace TaskManager.Web.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class AdminController : ControllerBase
     {
         private readonly IAdminService adminService;

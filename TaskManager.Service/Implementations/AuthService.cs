@@ -31,7 +31,7 @@ namespace TaskManager.Service.Implementations
             var employee = await repo.Employees.FindAsync(E => E.Username == user.Username);
             if (employee is not null)
             {
-                var result = PasswordManager.VerifyPassword(employee.Password, user.Password);
+                var result = PasswordManager.VerifyPassword(user.Password, employee.Password);
                 if (result)
                 {
                     var accessToken = GenerateToken(employee, "Employee");
@@ -42,7 +42,7 @@ namespace TaskManager.Service.Implementations
             var manager = await repo.Managers.FindAsync(M => M.Username == user.Username);
             if (manager is not null)
             {
-                var result = PasswordManager.VerifyPassword(manager.Password, user.Password);
+                var result = PasswordManager.VerifyPassword(user.Password, manager.Password);
                 if (result)
                 {
                     var accessToken = GenerateToken(manager, "Manager");
