@@ -7,6 +7,7 @@ using TaskManager.Web.Extensions;
 using TaskManager.Web.Middlewares;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -73,6 +74,28 @@ builder.Services.AddSwaggerGen(options =>
             new List<string>()
         }
     });
+});
+
+// Change Model Binding Validation Response
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var errors = context.ModelState
+            .SelectMany(x => x.Value.Errors)
+            .Select(e => e.ErrorMessage)
+            .ToList();
+
+        var response = new BaseResult<string>
+        {
+            IsSuccess = false,
+            Message = "Validation failed",
+            Errors = errors,
+            StatusCode = MyStatusCode.BadRequest
+        };
+
+        return new BadRequestObjectResult(response);
+    };
 });
 
 var app = builder.Build();
