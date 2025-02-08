@@ -15,5 +15,6 @@ namespace TaskManager.Service.Interfaces
         Task<BaseResult<LoginResponseDto>> Login(LoginRequestDto user);
         Task<BaseResult<string>> SignIn(EmployeeSignInDto employee);
         Task<BaseResult<string>> SignIn(ManagerSignInDto manager);
+        Task<BaseResult<string>> SignIn(AdminSignInDto adminDto);
     }
 }

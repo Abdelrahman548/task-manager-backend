@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TaskManager.Service.DTOs.Request;
 using TaskManager.Service.DTOs.Response;
 using TaskManager.Service.DTOs.SignIn;
@@ -18,20 +19,28 @@ namespace TaskManager.Web.Controllers
         {
             this.authService = authService;
         }
-        [HttpPost("")]
+        [HttpPost("Login")]
         public async Task<ActionResult<BaseResult<LoginResponseDto>>> Login(LoginRequestDto dto)
         {
             var result = await authService.Login(dto);
             return StatusCode((int)result.StatusCode, result);
         }
-        [HttpPost("Employee")]
-        public async Task<ActionResult<BaseResult<string>>> SiginInEmployee(EmployeeSignInDto dto)
+        [HttpPost("Sigin/Employee")]
+        public async Task<ActionResult<BaseResult<string>>> SignInEmployee(EmployeeSignInDto dto)
         {
             var result = await authService.SignIn(dto);
             return StatusCode((int)result.StatusCode, result);
         }
-        [HttpPost("Manager")]
-        public async Task<ActionResult<BaseResult<string>>> SiginInEmployee(ManagerSignInDto dto)
+        [HttpPost("Sigin/Manager")]
+        public async Task<ActionResult<BaseResult<string>>> SignInManager(ManagerSignInDto dto)
+        {
+            var result = await authService.SignIn(dto);
+            return StatusCode((int)result.StatusCode, result);
+        }
+        
+        [HttpPost("Sigin/Admin")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<BaseResult<string>>> SignInAdmin(AdminSignInDto dto)
         {
             var result = await authService.SignIn(dto);
             return StatusCode((int)result.StatusCode, result);
