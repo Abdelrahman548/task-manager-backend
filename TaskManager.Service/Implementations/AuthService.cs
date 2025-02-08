@@ -50,6 +50,17 @@ namespace TaskManager.Service.Implementations
                     return new() { IsSuccess = true, Data = loginResponse, StatusCode = MyStatusCode.OK };
                 }
             }
+            var admin = await repo.Admins.FindAsync(E => E.Username == user.Username);
+            if (admin is not null)
+            {
+                var result = PasswordManager.VerifyPassword(user.Password, admin.Password);
+                if (result)
+                {
+                    var accessToken = GenerateToken(admin, "Admin");
+                    var loginResponse = new LoginResponseDto() { Token = new Token() { AccessToken = accessToken } };
+                    return new() { IsSuccess = true, Data = loginResponse, StatusCode = MyStatusCode.OK };
+                }
+            }
             return new() { IsSuccess = false, Errors = ["Invalid Email or Password" ], StatusCode = MyStatusCode.NotFound };
         }
 
@@ -59,6 +70,8 @@ namespace TaskManager.Service.Implementations
             if(oldEmployee is not null) return new() { IsSuccess = false, Errors = ["Repaeated Username"], StatusCode = MyStatusCode.BadRequest };
             var oldManager = await repo.Managers.FindAsync(E => E.Username == employeeDto.Username);
             if (oldManager is not null) return new() { IsSuccess = false, Errors = ["Repaeated Username"], StatusCode = MyStatusCode.BadRequest };
+            var oldAdmin = await repo.Admins.FindAsync(E => E.Username == employeeDto.Username);
+            if (oldAdmin is not null) return new() { IsSuccess = false, Errors = ["Repaeated Username"], StatusCode = MyStatusCode.BadRequest };
 
             var employee = mapper.Map<Employee>(employeeDto);
             
@@ -76,13 +89,14 @@ namespace TaskManager.Service.Implementations
             await repo.CompeleteAsync();
             return new() { IsSuccess = true, Message = "Registed Successfully", StatusCode = MyStatusCode.Created };
         }
-
         public async Task<BaseResult<string>> SignIn(ManagerSignInDto managerDto)
         {
             var oldManager = await repo.Managers.FindAsync(E => E.Username == managerDto.Username);
             if (oldManager is not null) return new() { IsSuccess = false, Errors = ["Repaeated Username"], StatusCode = MyStatusCode.BadRequest };
             var oldEmployee = await repo.Employees.FindAsync(E => E.Username == managerDto.Username);
             if (oldEmployee is not null) return new() { IsSuccess = false, Errors = ["Repaeated Username"], StatusCode = MyStatusCode.BadRequest };
+            var oldAdmin = await repo.Admins.FindAsync(E => E.Username == managerDto.Username);
+            if (oldAdmin is not null) return new() { IsSuccess = false, Errors = ["Repaeated Username"], StatusCode = MyStatusCode.BadRequest };
 
             var manager = mapper.Map<Manager>(managerDto);
 
@@ -99,6 +113,28 @@ namespace TaskManager.Service.Implementations
             await repo.CompeleteAsync();
             return new() { IsSuccess = true, Message = "Registed Successfully", StatusCode = MyStatusCode.Created };
         }
+        public async Task<BaseResult<string>> SignIn(AdminSignInDto adminDto)
+        {
+            var oldEmployee = await repo.Employees.FindAsync(E => E.Username == adminDto.Username);
+            if (oldEmployee is not null) return new() { IsSuccess = false, Errors = ["Repaeated Username"], StatusCode = MyStatusCode.BadRequest };
+            var oldManager = await repo.Managers.FindAsync(E => E.Username == adminDto.Username);
+            if (oldManager is not null) return new() { IsSuccess = false, Errors = ["Repaeated Username"], StatusCode = MyStatusCode.BadRequest };
+            var oldAdmin = await repo.Admins.FindAsync(E => E.Username == adminDto.Username);
+            if (oldAdmin is not null) return new() { IsSuccess = false, Errors = ["Repaeated Username"], StatusCode = MyStatusCode.BadRequest };
+
+            var admin = mapper.Map<Admin>(adminDto);
+
+            admin.Username = adminDto.Username;
+            var hashed = PasswordManager.HashPassword(adminDto.Password);
+            admin.Password = hashed;
+
+            admin.ID = Guid.NewGuid();
+
+            await repo.Admins.AddAsync(admin);
+            await repo.CompeleteAsync();
+            return new() { IsSuccess = true, Message = "Registed Successfully", StatusCode = MyStatusCode.Created };
+        }
+
         private string GenerateToken(Person person, string role)
         {
             // Fill Token with Info
