@@ -39,7 +39,7 @@ namespace TaskManager.Web.Controllers
         }
         
         [HttpPost("Sigin/Admin")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<BaseResult<string>>> SignInAdmin(AdminSignInDto dto)
         {
             var result = await authService.SignIn(dto);
