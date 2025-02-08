@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using TaskManager.Repository.Helpers;
 using TaskManager.Service.DTOs.Request;
 using TaskManager.Service.DTOs.Response;
@@ -18,6 +19,22 @@ namespace TaskManager.Web.Controllers
         public EmployeesController(IEmployeeService employeeService)
         {
             this.employeeService = employeeService;
+        }
+
+        [HttpGet("Current")]
+        public async Task<ActionResult<BaseResult<AdminResponseDto>>> Get()
+        {
+            var employeeIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (employeeIdStr is null)
+            {
+                return Unauthorized(
+                        new BaseResult<Guid>() { IsSuccess = false, Errors = ["UnAuthenticated"], StatusCode = MyStatusCode.Unauthorized }
+                    );
+            }
+            var employeeID = new Guid(employeeIdStr);
+            var result = await employeeService.Get(employeeID);
+
+            return StatusCode((int)result.StatusCode, result);
         }
 
         [HttpGet("{employeeId:guid}")]
