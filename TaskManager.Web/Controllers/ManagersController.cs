@@ -11,7 +11,6 @@ namespace TaskManager.Web.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
     public class ManagersController : ControllerBase
     {
         private readonly IManagerService managerService;
@@ -21,6 +20,7 @@ namespace TaskManager.Web.Controllers
             this.managerService = managerService;
         }
         [HttpGet("{id:guid}")]
+        [Authorize(Roles = "Admin,Manager,Employee")]
         public async Task<ActionResult<BaseResult<ManagerResponseDto>>> Get(Guid id)
         {
             var result = await managerService.Get(id);
@@ -29,6 +29,7 @@ namespace TaskManager.Web.Controllers
         }
 
         [HttpGet("")]
+        [Authorize(Roles = "Admin,Manager,Employee")]
         public async Task<ActionResult<BaseResult<PagedList<ManagerResponseDto>>>> GetAll([FromQuery] ItemQueryParameters queryParameters)
         {
             var result = await managerService.Get(queryParameters);
@@ -36,6 +37,7 @@ namespace TaskManager.Web.Controllers
         }
 
         [HttpPut("{id:guid}")]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<ActionResult<BaseResult<Guid>>> Update(Guid id, ManagerRequestDto dto)
         {
             var result = await managerService.Update(dto, id);
@@ -44,6 +46,7 @@ namespace TaskManager.Web.Controllers
         }
 
         [HttpDelete("{id:guid}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<BaseResult<string>>> Delete(Guid id)
         {
             var result = await managerService.Delete(id);

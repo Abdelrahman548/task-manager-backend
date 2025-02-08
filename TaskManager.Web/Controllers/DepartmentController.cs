@@ -20,7 +20,7 @@ namespace TaskManager.Web.Controllers
         }
         
         [HttpPost("")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<BaseResult<DepartmentResponseDto>>> Add(DepartmentRequestDto dto)
         {
             var result = await departmentService.Add(dto);
@@ -43,7 +43,7 @@ namespace TaskManager.Web.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<BaseResult<Guid>>> Update(Guid id, DepartmentRequestDto dto)
         {
             var result = await departmentService.Update(dto,id);
@@ -52,7 +52,7 @@ namespace TaskManager.Web.Controllers
         }
 
         [HttpDelete("{id:guid}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<BaseResult<string>>> Delete(Guid id)
         {
             var result = await departmentService.Delete(id);
