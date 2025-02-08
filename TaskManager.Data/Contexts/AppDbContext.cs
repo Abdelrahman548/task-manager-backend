@@ -16,10 +16,10 @@ namespace TaskManager.Data.Contexts
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Manager>().ToTable("Managers").Property(p => p.SearchableProperty).HasComputedColumnSql("Username + Password");
-            modelBuilder.Entity<Employee>().ToTable("Employees").Property(p => p.SearchableProperty).HasComputedColumnSql("Username + Password");
+            modelBuilder.Entity<Manager>().ToTable("Managers").Property(p => p.SearchableProperty).HasComputedColumnSql("FirstName + LastName");
+            modelBuilder.Entity<Employee>().ToTable("Employees").Property(p => p.SearchableProperty).HasComputedColumnSql("FirstName + LastName");
             modelBuilder.Entity<Department>().ToTable("Departments").Property(p => p.SearchableProperty).HasComputedColumnSql("Title");
-            modelBuilder.Entity<Admin>().ToTable("Admins").Property(p => p.SearchableProperty).HasComputedColumnSql("Username + Password");
+            modelBuilder.Entity<Admin>().ToTable("Admins").Property(p => p.SearchableProperty).HasComputedColumnSql("FirstName + LastName");
             modelBuilder.Entity<MyTask>().ToTable("Tasks").Property(p => p.SearchableProperty).HasComputedColumnSql("Title");
 
             modelBuilder.Entity<MyTask>()

@@ -12,7 +12,7 @@ using TaskManager.Data.Contexts;
 namespace TaskManager.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250207001611_InitialCreate")]
+    [Migration("20250208143437_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -67,7 +67,7 @@ namespace TaskManager.Data.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("nvarchar(max)")
-                        .HasComputedColumnSql("Username + Password");
+                        .HasComputedColumnSql("FirstName + LastName");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -146,7 +146,7 @@ namespace TaskManager.Data.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("nvarchar(max)")
-                        .HasComputedColumnSql("Username + Password");
+                        .HasComputedColumnSql("FirstName + LastName");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -202,7 +202,7 @@ namespace TaskManager.Data.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("nvarchar(max)")
-                        .HasComputedColumnSql("Username + Password");
+                        .HasComputedColumnSql("FirstName + LastName");
 
                     b.Property<string>("Username")
                         .IsRequired()

@@ -64,7 +64,7 @@ namespace TaskManager.Data.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("nvarchar(max)")
-                        .HasComputedColumnSql("Username + Password");
+                        .HasComputedColumnSql("FirstName + LastName");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -143,7 +143,7 @@ namespace TaskManager.Data.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("nvarchar(max)")
-                        .HasComputedColumnSql("Username + Password");
+                        .HasComputedColumnSql("FirstName + LastName");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -199,7 +199,7 @@ namespace TaskManager.Data.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("nvarchar(max)")
-                        .HasComputedColumnSql("Username + Password");
+                        .HasComputedColumnSql("FirstName + LastName");
 
                     b.Property<string>("Username")
                         .IsRequired()
