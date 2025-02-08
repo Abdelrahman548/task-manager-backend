@@ -44,7 +44,7 @@ builder.Services.AddAuthentication()
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SigningKey)),
 
              ValidateLifetime = true,
-            ClockSkew = TimeSpan.FromMinutes(jwtOptions.LifeTime),
+            ClockSkew = TimeSpan.Zero,
         };
     });
 
@@ -62,7 +62,13 @@ builder.Services.AddSwaggerGen(options =>
         In = ParameterLocation.Header,
         Description = "Enter your token"
     });
-
+    options.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+    {
+        Name = "API_KEY",
+        Type = SecuritySchemeType.ApiKey,
+        In = ParameterLocation.Header,
+        Description = "Enter your API Key"
+    });
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -72,6 +78,17 @@ builder.Services.AddSwaggerGen(options =>
                 {
                     Type = ReferenceType.SecurityScheme,
                     Id = "Bearer"
+                }
+            },
+            new List<string>()
+        },
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "ApiKey"
                 }
             },
             new List<string>()

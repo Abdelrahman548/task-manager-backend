@@ -149,8 +149,8 @@ namespace TaskManager.Service.Implementations
                     new(ClaimTypes.NameIdentifier, person.ID.ToString()),
                     new(ClaimTypes.Name, person.Username),
                     new(ClaimTypes.Role, role),
-                })
-
+                }),
+                Expires = DateTime.UtcNow.AddMinutes(jwtOptions.LifeTime),
             };
 
             // Generate Token

@@ -8,7 +8,7 @@ namespace TaskManager.Web.Middlewares
         private readonly RequestDelegate next;
         private readonly ILogger<ApiKeyMiddleware> logger;
         private readonly IConfiguration configuration;
-        private const string API_KEY_HEADER = "Api-Key";
+        private const string API_KEY_HEADER = "API_KEY";
 
 
         public ApiKeyMiddleware(RequestDelegate next, ILogger<ApiKeyMiddleware> logger, IConfiguration configuration)
