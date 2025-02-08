@@ -28,6 +28,7 @@ namespace TaskManager.Web.Controllers
         }
 
         [HttpGet("{id:guid}")]
+        [Authorize(Roles = "Admin,Manager,Employee")]
         public async Task<ActionResult<BaseResult<DepartmentResponseDto>>> Get(Guid id)
         {
             var result = await departmentService.Get(id);
@@ -39,6 +40,21 @@ namespace TaskManager.Web.Controllers
         public async Task<ActionResult<BaseResult<PagedList<DepartmentResponseDto>>>> GetAll([FromQuery] ItemQueryParameters queryParameters)
         {
             var result = await departmentService.Get(queryParameters);
+            return StatusCode((int)result.StatusCode, result);
+        }
+
+        [HttpGet("{id:guid}/Employees")]
+        [Authorize(Roles = "Admin,Manager,Employee")]
+        public async Task<ActionResult<BaseResult<PagedList<EmployeeResponseDto>>>> GetAllEmployees(Guid id, [FromQuery] ItemQueryParameters queryParameters)
+        {
+            var result = await departmentService.GetEmployees(id,queryParameters);
+            return StatusCode((int)result.StatusCode, result);
+        }
+        [HttpGet("{id:guid}/Managers")]
+        [Authorize(Roles = "Admin,Manager,Employee")]
+        public async Task<ActionResult<BaseResult<PagedList<ManagerResponseDto>>>> GetAllManagers(Guid id, [FromQuery] ItemQueryParameters queryParameters)
+        {
+            var result = await departmentService.GetManagers(id,queryParameters);
             return StatusCode((int)result.StatusCode, result);
         }
 

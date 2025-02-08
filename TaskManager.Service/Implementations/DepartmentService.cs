@@ -70,11 +70,11 @@ namespace TaskManager.Service.Implementations
             return new() { IsSuccess = true, Message = Messages.UPDATE_SUCCESS, Data = department.ID, StatusCode = MyStatusCode.OK };
         }
 
-        public async Task<BaseResult<PagedList<DepartmentResponseDto>>> GetEmployees(Guid departmentId, ItemQueryParameters criteria)
+        public async Task<BaseResult<PagedList<EmployeeResponseDto>>> GetEmployees(Guid departmentId, ItemQueryParameters criteria)
         {
             var pageList = await repo.Employees.GetAllAsync(e => e.DepartmentID == departmentId,criteria);
-            var responsePageList = new PagedList<DepartmentResponseDto>(
-                                    pageList.Items.Select(item => mapper.Map<DepartmentResponseDto>(item)).ToList(),
+            var responsePageList = new PagedList<EmployeeResponseDto>(
+                                    pageList.Items.Select(item => mapper.Map<EmployeeResponseDto>(item)).ToList(),
                                     pageList.Page,
                                     pageList.PageSize,
                                     pageList.TotalCount
@@ -83,11 +83,11 @@ namespace TaskManager.Service.Implementations
             return new() { IsSuccess = true, Data = responsePageList, Message = Messages.GET_SUCCESS, StatusCode = MyStatusCode.OK };
         }
 
-        public async Task<BaseResult<PagedList<DepartmentResponseDto>>> GetManagers(Guid departmentId, ItemQueryParameters criteria)
+        public async Task<BaseResult<PagedList<ManagerResponseDto>>> GetManagers(Guid departmentId, ItemQueryParameters criteria)
         {
             var pageList = await repo.Managers.GetAllAsync(e => e.DepartmentID == departmentId, criteria);
-            var responsePageList = new PagedList<DepartmentResponseDto>(
-                                    pageList.Items.Select(item => mapper.Map<DepartmentResponseDto>(item)).ToList(),
+            var responsePageList = new PagedList<ManagerResponseDto>(
+                                    pageList.Items.Select(item => mapper.Map<ManagerResponseDto>(item)).ToList(),
                                     pageList.Page,
                                     pageList.PageSize,
                                     pageList.TotalCount
