@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using TaskManager.Service.DTOs.Request;
 
-namespace TaskManager.Service.DTOs.SignIn
+namespace TaskManager.Service.DTOs.SignUp
 {
-    public class EmployeeSignInDto: EmployeeRequestDto
+    public class EmployeeSignUpDto: EmployeeRequestDto
     {
         [Required]
         [EmailAddress]

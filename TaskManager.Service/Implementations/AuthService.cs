@@ -8,7 +8,7 @@ using TaskManager.Data.Entities.Abstracts;
 using TaskManager.Repository.Interfaces;
 using TaskManager.Service.DTOs.Request;
 using TaskManager.Service.DTOs.Response;
-using TaskManager.Service.DTOs.SignIn;
+using TaskManager.Service.DTOs.SignUp;
 using TaskManager.Service.Helpers;
 using TaskManager.Service.Interfaces;
 
@@ -64,7 +64,7 @@ namespace TaskManager.Service.Implementations
             return new() { IsSuccess = false, Errors = ["Invalid Email or Password" ], StatusCode = MyStatusCode.NotFound };
         }
 
-        public async Task<BaseResult<string>> SignIn(EmployeeSignInDto employeeDto)
+        public async Task<BaseResult<string>> SignIn(EmployeeSignUpDto employeeDto)
         {
             var oldEmployee = await repo.Employees.FindAsync(E => E.Username == employeeDto.Username);
             if(oldEmployee is not null) return new() { IsSuccess = false, Errors = ["Repaeated Username"], StatusCode = MyStatusCode.BadRequest };
@@ -89,7 +89,7 @@ namespace TaskManager.Service.Implementations
             await repo.CompeleteAsync();
             return new() { IsSuccess = true, Message = "Registed Successfully", StatusCode = MyStatusCode.Created };
         }
-        public async Task<BaseResult<string>> SignIn(ManagerSignInDto managerDto)
+        public async Task<BaseResult<string>> SignIn(ManagerSignUpDto managerDto)
         {
             var oldManager = await repo.Managers.FindAsync(E => E.Username == managerDto.Username);
             if (oldManager is not null) return new() { IsSuccess = false, Errors = ["Repaeated Username"], StatusCode = MyStatusCode.BadRequest };
@@ -113,7 +113,7 @@ namespace TaskManager.Service.Implementations
             await repo.CompeleteAsync();
             return new() { IsSuccess = true, Message = "Registed Successfully", StatusCode = MyStatusCode.Created };
         }
-        public async Task<BaseResult<string>> SignIn(AdminSignInDto adminDto)
+        public async Task<BaseResult<string>> SignIn(AdminSignUpDto adminDto)
         {
             var oldEmployee = await repo.Employees.FindAsync(E => E.Username == adminDto.Username);
             if (oldEmployee is not null) return new() { IsSuccess = false, Errors = ["Repaeated Username"], StatusCode = MyStatusCode.BadRequest };

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TaskManager.Service.DTOs.Request;
 using TaskManager.Service.DTOs.Response;
-using TaskManager.Service.DTOs.SignIn;
+using TaskManager.Service.DTOs.SignUp;
 using TaskManager.Service.Helpers;
 using TaskManager.Service.Implementations;
 using TaskManager.Service.Interfaces;
@@ -25,22 +25,22 @@ namespace TaskManager.Web.Controllers
             var result = await authService.Login(dto);
             return StatusCode((int)result.StatusCode, result);
         }
-        [HttpPost("Sigin/Employee")]
-        public async Task<ActionResult<BaseResult<string>>> SignInEmployee(EmployeeSignInDto dto)
+        [HttpPost("SignUp/Employee")]
+        public async Task<ActionResult<BaseResult<string>>> SignInEmployee(EmployeeSignUpDto dto)
         {
             var result = await authService.SignIn(dto);
             return StatusCode((int)result.StatusCode, result);
         }
-        [HttpPost("Sigin/Manager")]
-        public async Task<ActionResult<BaseResult<string>>> SignInManager(ManagerSignInDto dto)
+        [HttpPost("SignUp/Manager")]
+        public async Task<ActionResult<BaseResult<string>>> SignInManager(ManagerSignUpDto dto)
         {
             var result = await authService.SignIn(dto);
             return StatusCode((int)result.StatusCode, result);
         }
         
-        [HttpPost("Sigin/Admin")]
+        [HttpPost("SignUp/Admin")]
         //[Authorize(Roles = "Admin")]
-        public async Task<ActionResult<BaseResult<string>>> SignInAdmin(AdminSignInDto dto)
+        public async Task<ActionResult<BaseResult<string>>> SignInAdmin(AdminSignUpDto dto)
         {
             var result = await authService.SignIn(dto);
             return StatusCode((int)result.StatusCode, result);
