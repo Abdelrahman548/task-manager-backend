@@ -28,13 +28,13 @@ namespace TaskManager.Web.Controllers
         [HttpPost("SignUp/Employee")]
         public async Task<ActionResult<BaseResult<string>>> SignInEmployee(EmployeeSignUpDto dto)
         {
-            var result = await authService.SignIn(dto);
+            var result = await authService.SignUp(dto);
             return StatusCode((int)result.StatusCode, result);
         }
         [HttpPost("SignUp/Manager")]
         public async Task<ActionResult<BaseResult<string>>> SignInManager(ManagerSignUpDto dto)
         {
-            var result = await authService.SignIn(dto);
+            var result = await authService.SignUp(dto);
             return StatusCode((int)result.StatusCode, result);
         }
         
@@ -42,7 +42,7 @@ namespace TaskManager.Web.Controllers
         //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<BaseResult<string>>> SignInAdmin(AdminSignUpDto dto)
         {
-            var result = await authService.SignIn(dto);
+            var result = await authService.SignUp(dto);
             return StatusCode((int)result.StatusCode, result);
         }
     }
