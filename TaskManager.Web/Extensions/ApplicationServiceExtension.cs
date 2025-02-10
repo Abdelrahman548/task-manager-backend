@@ -21,6 +21,7 @@ namespace TaskManager.Web.Extensions
             services.AddAutoMapper(typeof(MyTaskProfile));
 
             // Services Registration
+            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IDepartmentService, DepartmentService>();
