@@ -45,7 +45,7 @@ namespace TaskManager.Service.Implementations
                 }
             }
             
-            var isValidPassword = PasswordManager.VerifyPassword(user.Password, person.Password);
+            var isValidPassword = HashingManager.VerifyPassword(user.Password, person.Password);
             if (isValidPassword)
             {
                 var accessToken = tokenService.GenerateAccessToken(person, role);
@@ -64,7 +64,7 @@ namespace TaskManager.Service.Implementations
             var employee = mapper.Map<Employee>(employeeDto);
             
             employee.Username = employeeDto.Username;
-            var hashed = PasswordManager.HashPassword(employeeDto.Password);
+            var hashed = HashingManager.HashPassword(employeeDto.Password);
             employee.Password = hashed;
             
             employee.ID = Guid.NewGuid();
@@ -86,7 +86,7 @@ namespace TaskManager.Service.Implementations
             var manager = mapper.Map<Manager>(managerDto);
 
             manager.Username = managerDto.Username;
-            var hashed = PasswordManager.HashPassword(managerDto.Password);
+            var hashed = HashingManager.HashPassword(managerDto.Password);
             manager.Password = hashed;
             manager.ID = Guid.NewGuid();
 
@@ -107,7 +107,7 @@ namespace TaskManager.Service.Implementations
             var admin = mapper.Map<Admin>(adminDto);
 
             admin.Username = adminDto.Username;
-            var hashed = PasswordManager.HashPassword(adminDto.Password);
+            var hashed = HashingManager.HashPassword(adminDto.Password);
             admin.Password = hashed;
 
             admin.ID = Guid.NewGuid();

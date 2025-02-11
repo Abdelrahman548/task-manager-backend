@@ -1,6 +1,6 @@
 ﻿namespace TaskManager.Service.Helpers
 {
-    public static class PasswordManager
+    public static class HashingManager
     {
         public const int WORKFACTOR = 12;
         public static string HashPassword(string password)
