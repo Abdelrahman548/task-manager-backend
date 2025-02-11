@@ -21,6 +21,9 @@ builder.Services.AddOpenApi();
 var jwtOptions = builder.Configuration.GetSection("Jwt").Get<JwtOptions>();
 if(jwtOptions is not null) builder.Services.AddSingleton(jwtOptions);
 
+var emailOptions = builder.Configuration.GetSection("Email").Get<EmailOptions>();
+if (emailOptions is not null) builder.Services.AddSingleton(emailOptions);
+
 builder.Services.AddApplicationServiceExtension();
 
 // Database Register
