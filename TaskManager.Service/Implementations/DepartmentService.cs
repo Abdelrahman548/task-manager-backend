@@ -39,7 +39,7 @@ namespace TaskManager.Service.Implementations
 
         public async Task<BaseResult<PagedList<DepartmentResponseDto>>> Get(ItemQueryParameters criteria)
         {
-            var pageList = await repo.Departments.GetAllAsync(criteria);
+            var pageList = await repo.Departments.GetAllAsync<Department>(criteria);
             var responsePageList = new PagedList<DepartmentResponseDto>(
                                     pageList.Items.Select(item => mapper.Map<DepartmentResponseDto>(item)).ToList(),
                                     pageList.Page,
@@ -72,7 +72,7 @@ namespace TaskManager.Service.Implementations
 
         public async Task<BaseResult<PagedList<EmployeeResponseDto>>> GetEmployees(Guid departmentId, ItemQueryParameters criteria)
         {
-            var pageList = await repo.Employees.GetAllAsync(e => e.DepartmentID == departmentId,criteria);
+            var pageList = await repo.Employees.GetAllAsync<Employee>(e => e.DepartmentID == departmentId,criteria);
             var responsePageList = new PagedList<EmployeeResponseDto>(
                                     pageList.Items.Select(item => mapper.Map<EmployeeResponseDto>(item)).ToList(),
                                     pageList.Page,
@@ -85,7 +85,7 @@ namespace TaskManager.Service.Implementations
 
         public async Task<BaseResult<PagedList<ManagerResponseDto>>> GetManagers(Guid departmentId, ItemQueryParameters criteria)
         {
-            var pageList = await repo.Managers.GetAllAsync(e => e.DepartmentID == departmentId, criteria);
+            var pageList = await repo.Managers.GetAllAsync<Manager>(e => e.DepartmentID == departmentId, criteria);
             var responsePageList = new PagedList<ManagerResponseDto>(
                                     pageList.Items.Select(item => mapper.Map<ManagerResponseDto>(item)).ToList(),
                                     pageList.Page,

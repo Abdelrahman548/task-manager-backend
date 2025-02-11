@@ -6,7 +6,7 @@ using TaskManager.Data.Helpers;
 
 namespace TaskManager.Data.Entities
 {
-    public class MyTask : Entity
+    public class MyTask : SearchableEntity
     {
         [MaxLength(50)]
         public string Title { get; set; } = string.Empty;

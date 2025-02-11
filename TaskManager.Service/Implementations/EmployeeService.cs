@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using TaskManager.Data.Entities;
 using TaskManager.Repository.Helpers;
 using TaskManager.Repository.Interfaces;
 using TaskManager.Service.DTOs.Request;
@@ -36,7 +37,7 @@ namespace TaskManager.Service.Implementations
 
         public async Task<BaseResult<PagedList<EmployeeResponseDto>>> Get(ItemQueryParameters criteria)
         {
-            var pageList = await repo.Employees.GetAllAsync(criteria);
+            var pageList = await repo.Employees.GetAllAsync<Employee>(criteria);
             var responsePageList = new PagedList<EmployeeResponseDto>(
                                     pageList.Items.Select(item => mapper.Map<EmployeeResponseDto>(item)).ToList(),
                                     pageList.Page,

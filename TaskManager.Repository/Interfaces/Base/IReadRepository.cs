@@ -13,8 +13,10 @@ namespace TaskManager.Repository.Interfaces.Base
         where T : Entity
     {
         Task<T?> GetByIdAsync(Guid id);
-        Task<PagedList<T>> GetAllAsync(ItemQueryParameters queryParameters);
-        Task<PagedList<T>> GetAllAsync(Expression<Func<T, bool>> criteria, ItemQueryParameters queryParameters);
+        Task<PagedList<TSearchable>> GetAllAsync<TSearchable>(ItemQueryParameters queryParameters)
+            where TSearchable : SearchableEntity, T;
+        Task<PagedList<TSearchable>> GetAllAsync<TSearchable>(Expression<Func<TSearchable, bool>> criteria, ItemQueryParameters queryParameters)
+            where TSearchable : SearchableEntity, T;
         Task<T?> FindAsync(Expression<Func<T, bool>> criteria, string[] includes = null);
     }
 }

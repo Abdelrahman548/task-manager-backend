@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaskManager.Data.Entities;
 using TaskManager.Repository.Helpers;
 using TaskManager.Repository.Interfaces;
 using TaskManager.Service.DTOs.Request;
@@ -33,7 +34,7 @@ namespace TaskManager.Service.Implementations
 
         public async Task<BaseResult<PagedList<AdminResponseDto>>> Get(ItemQueryParameters criteria)
         {
-            var pageList = await repo.Admins.GetAllAsync(criteria);
+            var pageList = await repo.Admins.GetAllAsync<Admin>(criteria);
             var responsePageList = new PagedList<AdminResponseDto>(
                                     pageList.Items.Select(item => mapper.Map<AdminResponseDto>(item)).ToList(),
                                     pageList.Page,

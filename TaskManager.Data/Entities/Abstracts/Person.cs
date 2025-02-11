@@ -9,7 +9,7 @@ using TaskManager.Data.Helpers;
 
 namespace TaskManager.Data.Entities.Abstracts
 {
-    public abstract class Person : Entity
+    public abstract class Person : SearchableEntity
     {
         [EmailAddress]
         [MaxLength(50)]

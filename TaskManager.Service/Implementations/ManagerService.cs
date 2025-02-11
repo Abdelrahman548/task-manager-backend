@@ -37,7 +37,7 @@ namespace TaskManager.Service.Implementations
 
         public async Task<BaseResult<PagedList<ManagerResponseDto>>> Get(ItemQueryParameters criteria)
         {
-            var pageList = await repo.Managers.GetAllAsync(criteria);
+            var pageList = await repo.Managers.GetAllAsync<Manager>(criteria);
             var responsePageList = new PagedList<ManagerResponseDto>(
                                     pageList.Items.Select(item => mapper.Map<ManagerResponseDto>(item)).ToList(),
                                     pageList.Page,

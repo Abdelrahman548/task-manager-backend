@@ -10,7 +10,6 @@ using TaskManager.Data.Contexts;
 using TaskManager.Data.Entities.Abstracts;
 using TaskManager.Repository.Helpers;
 using TaskManager.Repository.Interfaces;
-using TaskManager.Repository.Interfaces.Base;
 
 namespace TaskManager.Repository.Implementations
 {
@@ -33,19 +32,22 @@ namespace TaskManager.Repository.Implementations
             _context.Set<T>().Remove(item);
         }
 
-        public async Task<PagedList<T>> GetAllAsync(ItemQueryParameters queryParameters)
+        public async Task<PagedList<TSearchable>> GetAllAsync<TSearchable>(ItemQueryParameters queryParameters)
+            where TSearchable : SearchableEntity, T
         {
-            var query = _context.Set<T>().AsQueryable();
+            var query = _context.Set<TSearchable>().AsQueryable();
             var pageList = await GetAllAsyncPrivate(query, queryParameters);
             return pageList;
         }
-        public async Task<PagedList<T>> GetAllAsync(Expression<Func<T, bool>> criteria, ItemQueryParameters queryParameters)
+        public async Task<PagedList<TSearchable>> GetAllAsync<TSearchable>(Expression<Func<TSearchable, bool>> criteria, ItemQueryParameters queryParameters)
+            where TSearchable : SearchableEntity, T
         {
-            var query = _context.Set<T>().Where(criteria).AsQueryable();
+            var query = _context.Set<TSearchable>().Where(criteria).AsQueryable();
             var pageList = await GetAllAsyncPrivate(query, queryParameters);
             return pageList;
         }
-        private async Task<PagedList<T>> GetAllAsyncPrivate(IQueryable<T> query ,ItemQueryParameters queryParameters)
+        private async Task<PagedList<TSearchable>> GetAllAsyncPrivate<TSearchable>(IQueryable<TSearchable> query ,ItemQueryParameters queryParameters)
+            where TSearchable : SearchableEntity, T
         {
             // Filteration
             if (!string.IsNullOrEmpty(queryParameters.Category))
@@ -65,11 +67,12 @@ namespace TaskManager.Repository.Implementations
             }
 
             // Pagination
-            var pageList = await PagedList<T>.CreateAsync(query, queryParameters.Page, queryParameters.Limit);
+            var pageList = await PagedList<TSearchable>.CreateAsync(query, queryParameters.Page, queryParameters.Limit);
 
             return pageList;
         }
-        private IQueryable<T> ApplySorting(IQueryable<T> query, string sortField, bool descending)
+        private IQueryable<TSearchable> ApplySorting<TSearchable>(IQueryable<TSearchable> query, string sortField, bool descending)
+            where TSearchable : SearchableEntity, T
         {
             var propertyInfo = typeof(T).GetProperty(sortField, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
             if (propertyInfo is null) return query;
@@ -85,7 +88,7 @@ namespace TaskManager.Repository.Implementations
                 .Single()
                 .MakeGenericMethod(typeof(T), property.Type);
 
-            return (IQueryable<T>)method.Invoke(null, [query, lambda]);
+            return (IQueryable<TSearchable>)method.Invoke(null, [query, lambda]);
         }
 
         public async Task<T?> GetByIdAsync(Guid id)

@@ -60,7 +60,7 @@ namespace TaskManager.Service.Implementations
 
         public async Task<BaseResult<PagedList<MyTaskResponseDto>>> Get(ItemQueryParameters criteria)
         {
-            var pageList = await repo.MyTasks.GetAllAsync(criteria);
+            var pageList = await repo.MyTasks.GetAllAsync<MyTask>(criteria);
             var responsePageList = new PagedList<MyTaskResponseDto>(
                                     pageList.Items.Select(item => mapper.Map<MyTaskResponseDto>(item)).ToList(),
                                     pageList.Page,
@@ -109,7 +109,7 @@ namespace TaskManager.Service.Implementations
             var employee = await repo.Employees.GetByIdAsync(employeeId);
             if (employee is null) return new() { IsSuccess = false, Errors = ["Employee is Not Found"], StatusCode = MyStatusCode.NotFound };
 
-            var pageList = await repo.MyTasks.GetAllAsync(T => T.EmployeeID == employeeId, queryParameters);
+            var pageList = await repo.MyTasks.GetAllAsync<MyTask>(T => T.EmployeeID == employeeId, queryParameters);
             var responsePageList = new PagedList<MyTaskResponseDto>(
                                     pageList.Items.Select(item => mapper.Map<MyTaskResponseDto>(item)).ToList(),
                                     pageList.Page,
@@ -124,7 +124,7 @@ namespace TaskManager.Service.Implementations
         {
             var manager = await repo.Managers.GetByIdAsync(managerId);
             if (manager is null) return new() { IsSuccess = false, Errors = ["Manager is Not Found"], StatusCode = MyStatusCode.NotFound };
-            var pageList = await repo.MyTasks.GetAllAsync(T => T.ManagerID == managerId, queryParameters);
+            var pageList = await repo.MyTasks.GetAllAsync<MyTask>(T => T.ManagerID == managerId, queryParameters);
             var responsePageList = new PagedList<MyTaskResponseDto>(
                                     pageList.Items.Select(item => mapper.Map<MyTaskResponseDto>(item)).ToList(),
                                     pageList.Page,

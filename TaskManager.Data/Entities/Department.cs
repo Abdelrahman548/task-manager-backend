@@ -4,7 +4,7 @@ using TaskManager.Data.Entities.Abstracts;
 
 namespace TaskManager.Data.Entities
 {
-    public class Department : Entity
+    public class Department : SearchableEntity
     {
         [MaxLength(50)]
         public string Title { get; set; } = string.Empty;
