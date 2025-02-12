@@ -34,6 +34,10 @@ namespace TaskManager.Data.Contexts
                         .HasForeignKey(t => t.ManagerID)
                         .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<OTPVerification>()
+                        .HasIndex(o => o.Email)
+                        .IsUnique();
+
         }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<Manager> Managers { get; set; }
