@@ -74,8 +74,11 @@ namespace TaskManager.Service.Implementations
             var otpVerify = await repo.OTPVerifications.FindAsync(E => E.Email == passwordRequestDto.Email);
             if(otpVerify is null)
                 return new() { IsSuccess = false, Errors = ["Invalid Creadentials"], StatusCode = MyStatusCode.BadRequest };
+            if(otpVerify.ExpirationTime < DateTime.UtcNow)
+                return new() { IsSuccess = false, Errors = ["Invalid Creadentials"], StatusCode = MyStatusCode.BadRequest };
             if (HashingManager.VerifyPassword(passwordRequestDto.OTPCode, otpVerify.HashedOTP))
             {
+
                 Person? user = await repo.Employees.FindAsync(E => E.Username == passwordRequestDto.Email);
                 if (user is null)
                 {
