@@ -1,6 +1,7 @@
 ﻿using TaskManager.Service.Helpers;
 using TaskManager.Service.Interfaces;
 using MailKit.Net.Smtp;
+using MimeKit;
 
 namespace TaskManager.Service.Implementations
 {
@@ -8,50 +9,36 @@ namespace TaskManager.Service.Implementations
     {
         private readonly EmailOptions emailOptions;
 
-        public string Server { get; set; }
-        public int Port { get; set; }
-        public bool UseSSL { get; set; }
-        public string AppPassword { get; set; }
-
-        private EmailService(string server, int port, bool useSSL, string appPassword, EmailOptions emailOptions)
+        public EmailService(EmailOptions emailOptions)
         {
-            Server = server;
-            AppPassword = appPassword;
             this.emailOptions = emailOptions;
-            Port = port;
-            UseSSL = useSSL;
         }
-        public static EmailService CreateWithSSL(EmailOptions emailOptions)
+
+        public async Task SendEmailWithHtmlBody(string recieverName, string recieverEmail, string subject, string body)
         {
-            return new(emailOptions.SmtpServer, emailOptions.PortSSL, true, emailOptions.AppPassword, emailOptions);
+            var email = new MimeMessage();
+            email.From.Add(new MailboxAddress(emailOptions.SenderName, emailOptions.SenderEmail));
+            email.To.Add(new MailboxAddress(recieverName, recieverEmail));
+            email.Subject = subject;
+            email.Body = new TextPart("html") { Text = body };
+            using var smtp = new SmtpClient();
+            await smtp.ConnectAsync(emailOptions.SmtpServer, emailOptions.PortSSL, MailKit.Security.SecureSocketOptions.SslOnConnect);
+            await smtp.AuthenticateAsync(emailOptions.SenderEmail, emailOptions.AppPassword);
+            await smtp.SendAsync(email);
+            await smtp.DisconnectAsync(true);
         }
-        public static EmailService CreateWithoutSSL(EmailOptions emailOptions)
+        public async Task SendEmailWithPlainBody(string recieverName, string recieverEmail, string subject, string body)
         {
-            return new(emailOptions.SmtpServer, emailOptions.Port, false, emailOptions.AppPassword, emailOptions);
-        }
-        public void SendEmailWithHtmlBody(string recieverName, string recieverEmail, string subject, string body)
-        {
-            Email email = new Email(emailOptions.SenderName, emailOptions.SenderEmail, recieverName, recieverEmail);
-            var preparedEmail = email.PrepareEmailHtmlBody(subject, body);
-            using (var client = new SmtpClient())
-            {
-                client.Connect(Server, Port, UseSSL);
-                client.Authenticate(email.SenderEmail, AppPassword);
-                client.Send(preparedEmail);
-                client.Disconnect(true);
-            }
-        }
-        public void SendEmailWithPlainBody(string recieverName, string recieverEmail, string subject, string body)
-        {
-            Email email = new Email(emailOptions.SenderName, emailOptions.SenderEmail, recieverName, recieverEmail);
-            var preparedEmail = email.PrepareEmailPlainBody(subject, body);
-            using (var client = new SmtpClient())
-            {
-                client.Connect(Server, Port, UseSSL);
-                client.Authenticate(email.SenderEmail, AppPassword);
-                client.Send(preparedEmail);
-                client.Disconnect(true);
-            }
+            var email = new MimeMessage();
+            email.From.Add(new MailboxAddress(emailOptions.SenderName, emailOptions.SenderEmail));
+            email.To.Add(new MailboxAddress(recieverName, recieverEmail));
+            email.Subject = subject;
+            email.Body = new TextPart("plain") { Text = body };
+            using var smtp = new SmtpClient();
+            await smtp.ConnectAsync(emailOptions.SmtpServer, emailOptions.PortSSL, MailKit.Security.SecureSocketOptions.SslOnConnect);
+            await smtp.AuthenticateAsync(emailOptions.SenderEmail, emailOptions.AppPassword);
+            await smtp.SendAsync(email);
+            await smtp.DisconnectAsync(true);
         }
     }
 }

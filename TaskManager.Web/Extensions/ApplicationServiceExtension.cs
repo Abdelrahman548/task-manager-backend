@@ -28,6 +28,8 @@ namespace TaskManager.Web.Extensions
             services.AddScoped<IManagerService, ManagerService>();
             services.AddScoped<ITaskService, TaskService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IOTPService, OTPService>();
 
 
         }

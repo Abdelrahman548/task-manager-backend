@@ -9,7 +9,7 @@ namespace TaskManager.Service.Interfaces
 {
     public interface IEmailService
     {
-        void SendEmailWithHtmlBody(string recieverName, string recieverEmail, string subject, string body);
-        void SendEmailWithPlainBody(string recieverName, string recieverEmail, string subject, string body);
+        Task SendEmailWithHtmlBody(string recieverName, string recieverEmail, string subject, string body);
+        Task SendEmailWithPlainBody(string recieverName, string recieverEmail, string subject, string body);
     }
 }
