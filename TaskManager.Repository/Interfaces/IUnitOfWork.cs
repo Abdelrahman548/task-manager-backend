@@ -14,6 +14,7 @@ namespace TaskManager.Repository.Interfaces
         IReadCreateUpdateDeleteRepo<Employee> Employees { get; }
         IReadCreateUpdateDeleteRepo<Manager> Managers { get; }
         IReadCreateUpdateDeleteRepo<Department> Departments { get; }
+        IReadCreateUpdateDeleteRepo<OTPVerification> OTPVerifications { get; }
         Task<int> CompeleteAsync();
     }
 }

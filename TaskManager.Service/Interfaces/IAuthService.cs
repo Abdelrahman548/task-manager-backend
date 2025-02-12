@@ -16,5 +16,7 @@ namespace TaskManager.Service.Interfaces
         Task<BaseResult<string>> SignUp(EmployeeSignUpDto employee);
         Task<BaseResult<string>> SignUp(ManagerSignUpDto manager);
         Task<BaseResult<string>> SignUp(AdminSignUpDto adminDto);
+        Task<BaseResult<string>> ForgotPassword(string Email);
+        Task<BaseResult<string>> ResetPassword(ResetPasswordRequestDto passwordRequestDto);
     }
 }

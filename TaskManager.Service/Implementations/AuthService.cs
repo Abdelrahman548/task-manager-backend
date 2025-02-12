@@ -19,12 +19,79 @@ namespace TaskManager.Service.Implementations
         private readonly IUnitOfWork repo;
         private readonly IMapper mapper;
         private readonly ITokenService tokenService;
+        private readonly IOTPService otpService;
 
-        public AuthService(IUnitOfWork repo, IMapper mapper, ITokenService tokenService)
+        public AuthService(IUnitOfWork repo, IMapper mapper, ITokenService tokenService, IOTPService otpService)
         {
             this.repo = repo;
             this.mapper = mapper;
             this.tokenService = tokenService;
+            this.otpService = otpService;
+        }
+
+        public async Task<BaseResult<string>> ForgotPassword(string email)
+        {
+            Person? user = await repo.Employees.FindAsync(E => E.Username == email);
+            if (user is null)
+            {
+                user = await repo.Managers.FindAsync(E => E.Username == email);
+                if (user is null)
+                {
+                    user = await repo.Admins.FindAsync(E => E.Username == email);
+                    if (user is null)
+                        return new() { IsSuccess = false, Errors = ["Invalid Email"], StatusCode = MyStatusCode.BadRequest };
+                }
+            }
+            int timeInMinutes = 5;
+            string subject = "Your OTP for Email Verfication";
+            string otp = otpService.GenerateOTP();
+            try
+            {
+                string body = otpService.GetBodyTemplate(otp, timeInMinutes, "TaskManager App");
+                await otpService.SendOTPEmailHtmlBody($"{user.FirstName} {user.LastName}", email, subject, body);
+            }
+            catch
+            {
+                return new() { IsSuccess = false, Errors = ["Something went wrong, please try again later"], StatusCode = MyStatusCode.BadRequest };
+            }
+            var otpVerify = await repo.OTPVerifications.FindAsync(E => E.Email == email);
+            var expirationTime = DateTime.UtcNow.AddMinutes(timeInMinutes);
+            var hashedOtp = HashingManager.HashPassword(otp);
+            if (otpVerify is null)
+            {
+                otpVerify = new OTPVerification() { ID = Guid.NewGuid(), Email = user.Username, HashedOTP =  hashedOtp, ExpirationTime = expirationTime};
+                await repo.OTPVerifications.AddAsync(otpVerify);
+            }else
+            {
+                otpVerify.HashedOTP = hashedOtp;
+                otpVerify.ExpirationTime = expirationTime;
+            }
+            await repo.CompeleteAsync();
+            return new() { IsSuccess = true, Message = "OTP is sent, Please check your email box", StatusCode = MyStatusCode.OK };
+        }
+        public async Task<BaseResult<string>> ResetPassword(ResetPasswordRequestDto passwordRequestDto)
+        {
+            var otpVerify = await repo.OTPVerifications.FindAsync(E => E.Email == passwordRequestDto.Email);
+            if(otpVerify is null)
+                return new() { IsSuccess = false, Errors = ["Invalid Creadentials"], StatusCode = MyStatusCode.BadRequest };
+            if (HashingManager.VerifyPassword(passwordRequestDto.OTPCode, otpVerify.HashedOTP))
+            {
+                Person? user = await repo.Employees.FindAsync(E => E.Username == passwordRequestDto.Email);
+                if (user is null)
+                {
+                    user = await repo.Managers.FindAsync(E => E.Username == passwordRequestDto.Email);
+                    if (user is null)
+                    {
+                        user = await repo.Admins.FindAsync(E => E.Username == passwordRequestDto.Email);
+                        if (user is null)
+                            return new() { IsSuccess = false, Errors = ["Invalid Email"], StatusCode = MyStatusCode.BadRequest };
+                    }
+                }
+                user.Password = HashingManager.HashPassword(passwordRequestDto.NewPassword);
+                await repo.CompeleteAsync();
+                return new() { IsSuccess = true, Message = "Password is reset Successfully", StatusCode = MyStatusCode.OK };
+            }
+            return new() { IsSuccess = false, Errors = ["Invalid Creadentials"], StatusCode = MyStatusCode.BadRequest };
         }
         public async Task<BaseResult<LoginResponseDto>> Login(LoginRequestDto user)
         {
