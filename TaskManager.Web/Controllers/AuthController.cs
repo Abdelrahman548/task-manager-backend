@@ -45,10 +45,16 @@ namespace TaskManager.Web.Controllers
             var result = await authService.SignUp(dto);
             return StatusCode((int)result.StatusCode, result);
         }
-        [HttpPost("Password/Forgot/{email}")]
-        public async Task<ActionResult<BaseResult<string>>> ForgotPassword(string email)
+        [HttpPost("Email/Verify")]
+        public async Task<ActionResult<BaseResult<string>>> VerifyEmail(VerifyEmailRequestDto verifyDto)
         {
-            var result = await authService.ForgotPassword(email);
+            var result = await authService.VerifyEmail(verifyDto);
+            return StatusCode((int)result.StatusCode, result);
+        }
+        [HttpPost("Password/Forgot")]
+        public async Task<ActionResult<BaseResult<string>>> ForgotPassword(VerifyEmailRequestDto verifyDto)
+        {
+            var result = await authService.ForgotPassword(verifyDto);
             return StatusCode((int)result.StatusCode, result);
         }
         [HttpPost("Password/Reset")]

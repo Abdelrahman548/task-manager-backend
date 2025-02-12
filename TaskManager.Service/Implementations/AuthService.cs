@@ -29,15 +29,15 @@ namespace TaskManager.Service.Implementations
             this.otpService = otpService;
         }
 
-        public async Task<BaseResult<string>> ForgotPassword(string email)
+        public async Task<BaseResult<string>> ForgotPassword(VerifyEmailRequestDto verifyDto)
         {
-            Person? user = await repo.Employees.FindAsync(E => E.Username == email);
+            Person? user = await repo.Employees.FindAsync(E => E.Username == verifyDto.Email);
             if (user is null)
             {
-                user = await repo.Managers.FindAsync(E => E.Username == email);
+                user = await repo.Managers.FindAsync(E => E.Username == verifyDto.Email);
                 if (user is null)
                 {
-                    user = await repo.Admins.FindAsync(E => E.Username == email);
+                    user = await repo.Admins.FindAsync(E => E.Username == verifyDto.Email);
                     if (user is null)
                         return new() { IsSuccess = false, Errors = ["Invalid Email"], StatusCode = MyStatusCode.BadRequest };
                 }
@@ -48,13 +48,13 @@ namespace TaskManager.Service.Implementations
             try
             {
                 string body = otpService.GetBodyTemplate(otp, timeInMinutes, "TaskManager App");
-                await otpService.SendOTPEmailHtmlBody($"{user.FirstName} {user.LastName}", email, subject, body);
+                await otpService.SendOTPEmailHtmlBody($"{user.FirstName} {user.LastName}", verifyDto.Email, subject, body);
             }
             catch
             {
                 return new() { IsSuccess = false, Errors = ["Something went wrong, please try again later"], StatusCode = MyStatusCode.BadRequest };
             }
-            var otpVerify = await repo.OTPVerifications.FindAsync(E => E.Email == email);
+            var otpVerify = await repo.OTPVerifications.FindAsync(E => E.Email == verifyDto.Email);
             var expirationTime = DateTime.UtcNow.AddMinutes(timeInMinutes);
             var hashedOtp = HashingManager.HashPassword(otp);
             if (otpVerify is null)
@@ -124,12 +124,51 @@ namespace TaskManager.Service.Implementations
             }
             return new() { IsSuccess = false, Errors = ["Invalid Email or Password"], StatusCode = MyStatusCode.NotFound };
         }
-
+        public async Task<BaseResult<string>> VerifyEmail(VerifyEmailRequestDto verifyDto)
+        {
+            int timeInMinutes = 5;
+            string subject = "Your OTP for Email Verfication";
+            string otp = otpService.GenerateOTP();
+            try
+            {
+                string body = otpService.GetBodyTemplate(otp, timeInMinutes, "TaskManager App");
+                await otpService.SendOTPEmailHtmlBody($"unknown", verifyDto.Email, subject, body);
+            }
+            catch
+            {
+                return new() { IsSuccess = false, Errors = ["Something went wrong, please try again later"], StatusCode = MyStatusCode.BadRequest };
+            }
+            var otpVerify = await repo.OTPVerifications.FindAsync(E => E.Email == verifyDto.Email);
+            var expirationTime = DateTime.UtcNow.AddMinutes(timeInMinutes);
+            var hashedOtp = HashingManager.HashPassword(otp);
+            if (otpVerify is null)
+            {
+                otpVerify = new OTPVerification() { ID = Guid.NewGuid(), Email = verifyDto.Email, HashedOTP = hashedOtp, ExpirationTime = expirationTime };
+                await repo.OTPVerifications.AddAsync(otpVerify);
+            }
+            else
+            {
+                otpVerify.HashedOTP = hashedOtp;
+                otpVerify.ExpirationTime = expirationTime;
+            }
+            await repo.CompeleteAsync();
+            return new() { IsSuccess = true, Message = "OTP is sent, Please check your email box", StatusCode = MyStatusCode.OK };
+        }
         public async Task<BaseResult<string>> SignUp(EmployeeSignUpDto employeeDto)
         {
             var repeated = await IsUsernameRepeated(employeeDto.Username);
             if (repeated)
                 return new() { IsSuccess = false, Errors = ["Repeated Username"], StatusCode = MyStatusCode.BadRequest };
+
+            var otpVerify = await repo.OTPVerifications.FindAsync(E => E.Email == employeeDto.Username);
+            if(otpVerify is null)
+                return new() { IsSuccess = false, Errors = ["The Username is not verfied"], StatusCode = MyStatusCode.BadRequest };
+
+            if(!HashingManager.VerifyPassword(employeeDto.OTPEmailVerifyCode, otpVerify.HashedOTP))
+                return new() { IsSuccess = false, Errors = ["Invalid Credintials"], StatusCode = MyStatusCode.BadRequest };
+            
+            if(otpVerify.ExpirationTime < DateTime.UtcNow)
+                return new() { IsSuccess = false, Errors = ["Invalid Credintials"], StatusCode = MyStatusCode.BadRequest };
 
             var employee = mapper.Map<Employee>(employeeDto);
             
@@ -152,6 +191,15 @@ namespace TaskManager.Service.Implementations
             var repeated = await IsUsernameRepeated(managerDto.Username);
             if (repeated)
                 return new() { IsSuccess = false, Errors = ["Repeated Username"], StatusCode = MyStatusCode.BadRequest };
+            var otpVerify = await repo.OTPVerifications.FindAsync(E => E.Email == managerDto.Username);
+            if (otpVerify is null)
+                return new() { IsSuccess = false, Errors = ["The Username is not verfied"], StatusCode = MyStatusCode.BadRequest };
+
+            if (!HashingManager.VerifyPassword(managerDto.OTPEmailVerifyCode, otpVerify.HashedOTP))
+                return new() { IsSuccess = false, Errors = ["Invalid Credintials"], StatusCode = MyStatusCode.BadRequest };
+
+            if (otpVerify.ExpirationTime < DateTime.UtcNow)
+                return new() { IsSuccess = false, Errors = ["Invalid Credintials"], StatusCode = MyStatusCode.BadRequest };
 
             var manager = mapper.Map<Manager>(managerDto);
 
@@ -173,6 +221,16 @@ namespace TaskManager.Service.Implementations
             var repeated = await IsUsernameRepeated(adminDto.Username);
             if(repeated)
                 return new() { IsSuccess = false, Errors = ["Repeated Username"], StatusCode = MyStatusCode.BadRequest };
+
+            var otpVerify = await repo.OTPVerifications.FindAsync(E => E.Email == adminDto.Username);
+            if (otpVerify is null)
+                return new() { IsSuccess = false, Errors = ["The Username is not verfied"], StatusCode = MyStatusCode.BadRequest };
+
+            if (!HashingManager.VerifyPassword(adminDto.OTPEmailVerifyCode, otpVerify.HashedOTP))
+                return new() { IsSuccess = false, Errors = ["Invalid Credintials"], StatusCode = MyStatusCode.BadRequest };
+
+            if (otpVerify.ExpirationTime < DateTime.UtcNow)
+                return new() { IsSuccess = false, Errors = ["Invalid Credintials"], StatusCode = MyStatusCode.BadRequest };
 
             var admin = mapper.Map<Admin>(adminDto);
 
