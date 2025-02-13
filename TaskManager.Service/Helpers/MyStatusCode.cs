@@ -15,6 +15,7 @@ namespace TaskManager.Service.Helpers
         Forbidden = 403,
         NotFound = 404,
         Conflict = 409,
-        InternalServerError = 500
+        InternalServerError = 500,
+        TooManyRequests= 429,
     }
 }

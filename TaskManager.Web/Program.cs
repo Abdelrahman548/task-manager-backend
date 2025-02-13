@@ -132,8 +132,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Registerd Middlewares
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseMiddleware<ApiKeyMiddleware>();
+app.UseMiddleware<RateLimitingMiddleware>();
 
 app.UseHttpsRedirection();
 
