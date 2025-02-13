@@ -133,12 +133,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Registerd Middlewares
-app.UseMiddleware<ExceptionHandlingMiddleware>();
-app.UseMiddleware<ApiKeyMiddleware>();
-app.UseMiddleware<RateLimitingMiddleware>();
-
 app.UseHttpsRedirection();
+
+// Registerd Middlewares
+app.UseMiddleware<RateLimitingMiddleware>();
+app.UseMiddleware<ApiKeyMiddleware>();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseAuthorization();
 
