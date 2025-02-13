@@ -25,6 +25,8 @@ var emailOptions = builder.Configuration.GetSection("Email").Get<EmailOptions>()
 if (emailOptions is not null) builder.Services.AddSingleton(emailOptions);
 
 builder.Services.AddApplicationServiceExtension();
+builder.Services.AddMemoryCache();
+
 
 // Database Register
 builder.Services.AddDbContext<AppDbContext>(options => options.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("TaskManagerDB")));
