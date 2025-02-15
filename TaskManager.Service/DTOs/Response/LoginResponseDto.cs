@@ -10,5 +10,6 @@ namespace TaskManager.Service.DTOs.Response
     public class LoginResponseDto
     {
         public Token? Token { get; set; }
+        public string Role { get; set; } = string.Empty;
     }
 }

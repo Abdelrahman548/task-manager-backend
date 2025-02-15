@@ -119,7 +119,7 @@ namespace TaskManager.Service.Implementations
             if (isValidPassword)
             {
                 var accessToken = tokenService.GenerateAccessToken(person, role);
-                var loginResponse = new LoginResponseDto() { Token = new Token() { AccessToken = accessToken } };
+                var loginResponse = new LoginResponseDto() { Token = new Token() { AccessToken = accessToken }, Role = role };
                 return new() { IsSuccess = true, Data = loginResponse, StatusCode = MyStatusCode.OK };
             }
             return new() { IsSuccess = false, Errors = ["Invalid Email or Password"], StatusCode = MyStatusCode.NotFound };
