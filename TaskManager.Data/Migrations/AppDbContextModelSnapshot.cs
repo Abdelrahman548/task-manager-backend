@@ -298,6 +298,9 @@ namespace TaskManager.Data.Migrations
 
             modelBuilder.Entity("TaskManager.Data.Entities.UserView", b =>
                 {
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid>("ID")
                         .HasColumnType("uniqueidentifier");
 

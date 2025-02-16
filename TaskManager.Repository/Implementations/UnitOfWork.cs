@@ -22,6 +22,7 @@ namespace TaskManager.Repository.Implementations
             Departments = new Repository<Department>(_dbContext);
             MyTasks = new Repository<MyTask>(_dbContext);
             OTPVerifications = new Repository<OTPVerification>(_dbContext);
+            UsersView = new Repository<UserView>(_dbContext);
 
         }
         public IReadCreateUpdateRepo<Admin> Admins { get; }
@@ -34,6 +35,8 @@ namespace TaskManager.Repository.Implementations
 
         public IReadCreateUpdateDeleteRepo<Department> Departments { get; }
         public IReadCreateUpdateDeleteRepo<OTPVerification> OTPVerifications { get; }
+
+        public IReadCreateUpdateDeleteRepo<UserView> UsersView { get; }
 
         public async Task<int> CompeleteAsync()
         {

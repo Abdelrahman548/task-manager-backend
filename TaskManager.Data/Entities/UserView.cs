@@ -4,12 +4,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaskManager.Data.Entities.Abstracts;
 
 namespace TaskManager.Data.Entities
 {
-    public class UserView
+    public class UserView: Entity
     {
-        public Guid ID { get; set; }
         [EmailAddress]
         [MaxLength(50)]
         public string Username { get; set; } = string.Empty;

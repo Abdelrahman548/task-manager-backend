@@ -12,7 +12,7 @@ using TaskManager.Data.Contexts;
 namespace TaskManager.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250216150201_AddUsersView")]
+    [Migration("20250216150708_AddUsersView")]
     partial class AddUsersView
     {
         /// <inheritdoc />
@@ -301,6 +301,9 @@ namespace TaskManager.Data.Migrations
 
             modelBuilder.Entity("TaskManager.Data.Entities.UserView", b =>
                 {
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid>("ID")
                         .HasColumnType("uniqueidentifier");
 
