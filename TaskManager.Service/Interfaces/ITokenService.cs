@@ -11,5 +11,6 @@ namespace TaskManager.Service.Interfaces
     public interface ITokenService
     {
         string GenerateAccessToken(UserView person);
+        public string GenerateRefreshToken();
     }
 }
