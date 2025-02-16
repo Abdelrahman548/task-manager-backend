@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using TaskManager.Service.DTOs.Request;
 using TaskManager.Service.DTOs.Response;
 using TaskManager.Service.DTOs.SignUp;
@@ -23,6 +24,27 @@ namespace TaskManager.Web.Controllers
         public async Task<ActionResult<BaseResult<LoginResponseDto>>> Login(LoginRequestDto dto)
         {
             var result = await authService.Login(dto);
+            return StatusCode((int)result.StatusCode, result);
+        }
+        [HttpPost("Refresh")]
+        public async Task<ActionResult<BaseResult<LoginResponseDto>>> Refresh(RefreshRequestDto dto)
+        {
+            var result = await authService.Refresh(dto);
+            return StatusCode((int)result.StatusCode, result);
+        }
+        
+        [Authorize(Roles = "Admin, Employee, Manager")]
+        [HttpPost("Logout")]
+        public async Task<ActionResult<BaseResult<string>>> Logout()
+        {
+            var IdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (IdStr is null)
+            {
+                return Unauthorized(
+                        new BaseResult<Guid>() { IsSuccess = false, Errors = ["UnAuthenticated"], StatusCode = MyStatusCode.Unauthorized }
+                    );
+            }
+            var result = await authService.Logout(new(IdStr));
             return StatusCode((int)result.StatusCode, result);
         }
         [HttpPost("SignUp/Employee")]

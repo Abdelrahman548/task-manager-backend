@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -108,8 +109,35 @@ namespace TaskManager.Service.Implementations
                 return new() { IsSuccess = false, Errors = ["Invalid Email or Password"], StatusCode = MyStatusCode.NotFound };
 
             var accessToken = tokenService.GenerateAccessToken(userview);
+            var refreshToken = tokenService.GenerateRefreshToken();
 
-            var loginResponse = new LoginResponseDto() { Token = new Token() { AccessToken = accessToken }, Role = userview.Role };
+            string userId = userview.ID.ToString();
+            var refreshTokenRecord = await repo.RefreshTokens.FindAsync(R => R.UserId == userId);
+            if(refreshTokenRecord == null)
+            {
+                var refreshTokenEntry = new RefreshToken()
+                {
+                    ID = Guid.NewGuid(),
+                    UserId = userview.ID.ToString(),
+                    Token = refreshToken,
+                    IsRevoked = false,
+                    IsUsed = false,
+                    Expires = DateTime.UtcNow.AddDays(7)
+                };
+
+                await repo.RefreshTokens.AddAsync(refreshTokenEntry);
+            }
+            else
+            {
+                refreshTokenRecord.Token = refreshToken;
+                refreshTokenRecord.IsRevoked = false;
+                refreshTokenRecord.IsUsed = false;
+                refreshTokenRecord.Expires = DateTime.UtcNow.AddDays(7);
+            }
+
+            await repo.CompeleteAsync();
+
+            var loginResponse = new LoginResponseDto() { Token = new() { AccessToken = accessToken, RefreshToken = refreshToken }, Role = userview.Role };
 
             return new() { IsSuccess = true, Data = loginResponse, StatusCode = MyStatusCode.OK };
         }
@@ -239,6 +267,37 @@ namespace TaskManager.Service.Implementations
             if (user is not null) return true;
 
             return false;
+        }
+
+        public async Task<BaseResult<LoginResponseDto>> Refresh(RefreshRequestDto refreshRequest)
+        {
+            var userView = await repo.UsersView.FindAsync(R => R.ID == refreshRequest.UserId);
+            if (userView is null)
+            {
+                return new() { IsSuccess = false, Errors = ["Invalid Credintials"], StatusCode = MyStatusCode.BadRequest };
+            }
+
+            string userID = refreshRequest.UserId.ToString();
+            var refreshTokenRecord = await repo.RefreshTokens.FindAsync(R => R.UserId == userID);
+            if(refreshTokenRecord  == null || refreshTokenRecord.Token != refreshRequest.RefreshToken || refreshTokenRecord.Expires < DateTime.UtcNow || refreshTokenRecord.IsRevoked)
+            {
+                return new() { IsSuccess = false, Errors = ["Invalid Credintials"], StatusCode = MyStatusCode.BadRequest};
+            }
+            
+            var newAccessToken = tokenService.GenerateAccessToken(userView);
+
+            var loginResponse = new LoginResponseDto() { Token = new() { AccessToken = newAccessToken, RefreshToken = refreshTokenRecord.Token }, Role = userView.Role };
+            return new() { IsSuccess = true, Data = loginResponse, StatusCode = MyStatusCode.OK };
+        }
+
+        public async Task<BaseResult<string>> Logout(string UserId)
+        {
+            var refreshTokenRecord = await repo.RefreshTokens.FindAsync(R => R.UserId == UserId);
+            if(refreshTokenRecord is null)
+                return new() { IsSuccess = false, Errors = ["Invalid Credintials"], StatusCode = MyStatusCode.BadRequest };
+            refreshTokenRecord.IsRevoked = true;
+            await repo.CompeleteAsync();
+            return new() { IsSuccess = true, Message = "Logged out Successfully", StatusCode = MyStatusCode.OK};
         }
     }
 }

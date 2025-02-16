@@ -13,6 +13,8 @@ namespace TaskManager.Service.Interfaces
     public interface IAuthService
     {
         Task<BaseResult<LoginResponseDto>> Login(LoginRequestDto user);
+        Task<BaseResult<LoginResponseDto>> Refresh(RefreshRequestDto refreshRequest);
+        Task<BaseResult<string>> Logout(string UserId);
         Task<BaseResult<string>> SignUp(EmployeeSignUpDto employee);
         Task<BaseResult<string>> SignUp(ManagerSignUpDto manager);
         Task<BaseResult<string>> SignUp(AdminSignUpDto adminDto);
