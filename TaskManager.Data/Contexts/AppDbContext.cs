@@ -42,6 +42,9 @@ namespace TaskManager.Data.Contexts
                 .ToView("UsersView")
                 .HasNoKey();
 
+            modelBuilder.Entity<RefreshToken>()
+                .ToTable("RefreshTokens");
+
         }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<Manager> Managers { get; set; }
@@ -49,6 +52,7 @@ namespace TaskManager.Data.Contexts
         public virtual DbSet<Admin> Admins { get; set; }
         public virtual DbSet<MyTask> MyTasks { get; set; }
         public virtual DbSet<UserView> UsersView { get; set; }
+        public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 
     }
 }

@@ -23,6 +23,7 @@ namespace TaskManager.Repository.Implementations
             MyTasks = new Repository<MyTask>(_dbContext);
             OTPVerifications = new Repository<OTPVerification>(_dbContext);
             UsersView = new Repository<UserView>(_dbContext);
+            RefreshTokens = new Repository<RefreshToken>(_dbContext);
 
         }
         public IReadCreateUpdateRepo<Admin> Admins { get; }
@@ -37,6 +38,8 @@ namespace TaskManager.Repository.Implementations
         public IReadCreateUpdateDeleteRepo<OTPVerification> OTPVerifications { get; }
 
         public IReadCreateUpdateDeleteRepo<UserView> UsersView { get; }
+
+        public IReadCreateUpdateDeleteRepo<RefreshToken> RefreshTokens { get; }
 
         public async Task<int> CompeleteAsync()
         {
