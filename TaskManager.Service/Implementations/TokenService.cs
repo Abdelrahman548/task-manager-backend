@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using TaskManager.Data.Entities;
 using TaskManager.Data.Entities.Abstracts;
 using TaskManager.Service.Helpers;
 using TaskManager.Service.Interfaces;
@@ -20,7 +21,7 @@ namespace TaskManager.Service.Implementations
         {
             this.jwtOptions = jwtOptions;
         }
-        public string GenerateAccessToken(Person person, string role)
+        public string GenerateAccessToken(UserView person)
         {
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -32,7 +33,7 @@ namespace TaskManager.Service.Implementations
                 {
                     new(ClaimTypes.NameIdentifier, person.ID.ToString()),
                     new(ClaimTypes.Name, person.Username),
-                    new(ClaimTypes.Role, role),
+                    new(ClaimTypes.Role, person.Role),
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(jwtOptions.LifeTime),
             };

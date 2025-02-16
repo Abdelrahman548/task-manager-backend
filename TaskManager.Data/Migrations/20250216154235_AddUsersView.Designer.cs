@@ -12,7 +12,7 @@ using TaskManager.Data.Contexts;
 namespace TaskManager.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250216150708_AddUsersView")]
+    [Migration("20250216154235_AddUsersView")]
     partial class AddUsersView
     {
         /// <inheritdoc />

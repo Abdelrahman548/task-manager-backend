@@ -12,11 +12,11 @@ namespace TaskManager.Data.Migrations
         {
             migrationBuilder.Sql(@"
                 CREATE VIEW UsersView AS
-                SELECT ID, Username, Password, 'Admin' AS Role FROM Admins
+                SELECT ID, Username, Password, CreatedAt, 'Admin' AS Role FROM Admins
                 UNION ALL
-                SELECT ID, Username, Password, 'Employee' AS Role FROM Employees
+                SELECT ID, Username, Password, CreatedAt, 'Employee' AS Role FROM Employees
                 UNION ALL
-                SELECT ID, Username, Password, 'Manager' AS Role FROM Managers;
+                SELECT ID, Username, Password, CreatedAt, 'Manager' AS Role FROM Managers;
             ");
         }
 

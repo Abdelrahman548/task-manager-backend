@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -98,31 +99,19 @@ namespace TaskManager.Service.Implementations
         }
         public async Task<BaseResult<LoginResponseDto>> Login(LoginRequestDto user)
         {
-            Person? person = await repo.Employees.FindAsync(E => E.Username == user.Username);
-            string role = Roles.Employee;
-            if (person is null)
-            {
-                person = await repo.Managers.FindAsync(E => E.Username == user.Username);
-                role = Roles.Manager;
+            var userview = await repo.UsersView.FindAsync(E => E.Username == user.Username);
+            if (userview is null)
+                return new() { IsSuccess = false, Errors = ["Invalid Email or Password"], StatusCode = MyStatusCode.NotFound };
 
-                if (person is null)
-                {
-                    person = await repo.Admins.FindAsync(E => E.Username == user.Username);
-                    role = Roles.Admin;
+            var isValidPassword = HashingManager.VerifyPassword(user.Password, userview.Password);
+            if (!isValidPassword)
+                return new() { IsSuccess = false, Errors = ["Invalid Email or Password"], StatusCode = MyStatusCode.NotFound };
 
-                    if (person is null)
-                        return new() { IsSuccess = false, Errors = ["Invalid Email or Password"], StatusCode = MyStatusCode.NotFound };
-                }
-            }
-            
-            var isValidPassword = HashingManager.VerifyPassword(user.Password, person.Password);
-            if (isValidPassword)
-            {
-                var accessToken = tokenService.GenerateAccessToken(person, role);
-                var loginResponse = new LoginResponseDto() { Token = new Token() { AccessToken = accessToken }, Role = role };
-                return new() { IsSuccess = true, Data = loginResponse, StatusCode = MyStatusCode.OK };
-            }
-            return new() { IsSuccess = false, Errors = ["Invalid Email or Password"], StatusCode = MyStatusCode.NotFound };
+            var accessToken = tokenService.GenerateAccessToken(userview);
+
+            var loginResponse = new LoginResponseDto() { Token = new Token() { AccessToken = accessToken }, Role = userview.Role };
+
+            return new() { IsSuccess = true, Data = loginResponse, StatusCode = MyStatusCode.OK };
         }
         public async Task<BaseResult<string>> VerifyEmail(VerifyEmailRequestDto verifyDto)
         {
@@ -246,12 +235,8 @@ namespace TaskManager.Service.Implementations
         }
         private async Task<bool> IsUsernameRepeated(string username)
         {
-            var oldEmployee = await repo.Employees.FindAsync(E => E.Username == username);
-            if (oldEmployee is not null) return true;
-            var oldManager = await repo.Managers.FindAsync(E => E.Username == username);
-            if (oldManager is not null) return true;
-            var oldAdmin = await repo.Admins.FindAsync(E => E.Username == username);
-            if (oldAdmin is not null) return true;
+            var user = await repo.UsersView.FindAsync(E => E.Username == username);
+            if (user is not null) return true;
 
             return false;
         }
