@@ -38,12 +38,17 @@ namespace TaskManager.Data.Contexts
                         .HasIndex(o => o.Email)
                         .IsUnique();
 
+            modelBuilder.Entity<UserView>()
+                .ToView("UsersView")
+                .HasNoKey();
+
         }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<Manager> Managers { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<Admin> Admins { get; set; }
         public virtual DbSet<MyTask> MyTasks { get; set; }
+        public virtual DbSet<UserView> UsersView { get; set; }
 
     }
 }
