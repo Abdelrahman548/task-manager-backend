@@ -105,7 +105,7 @@ namespace TaskManager.Web.Controllers
             return StatusCode((int)result.StatusCode, result);
         }
 
-        [HttpGet("{taskId:guid}/Employee/{employeeId:guid}")]
+        [HttpPut("{taskId:guid}/Employee/{employeeId:guid}")]
         [Authorize(Roles = "Manager")]
         public async Task<ActionResult<BaseResult<MyTaskResponseDto>>> ReAssign(Guid taskId, Guid employeeId)
         {
@@ -122,7 +122,7 @@ namespace TaskManager.Web.Controllers
             return StatusCode((int)result.StatusCode, result);
         }
 
-        [HttpPost("{taskId:guid}/Employee/")]
+        [HttpPut("{taskId:guid}/Employee/")]
         [Authorize(Roles = "Employee")]
         public async Task<ActionResult<BaseResult<MyTaskResponseDto>>> UpdateStatus(Guid taskId, MyTaskRequestDto dto)
         {
